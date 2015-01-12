@@ -1,5 +1,5 @@
 /* global describe, expect, it, jasmine */
-var CacheConnector = require( '../src/cache-connector' ),
+var CacheConnector = require( '../src/connector' ),
 	EventEmitter = require( 'events' ).EventEmitter,
 	settings = { port: 6379, host: 'localhost' },
 	MESSAGE_TIME = 20;
