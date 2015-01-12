@@ -1,0 +1,25 @@
+{
+  "name": "deepstream.io-cache-and-storage-connector-template",
+  "version": "0.2.0",
+  "description": "A template that can be forked to create new cache and storage connectors for deepstream.io",
+  "main": "src/connector.js",
+  "scripts": {
+    "test": "node node_modules/jasmine-node/lib/jasmine-node/cli.js test --autotest --watch ./src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hoxton-one/deepstream.io-cache-and-storage-connector-template.git"
+  },
+  "author": "Wolfram Hempel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hoxton-one/deepstream.io-cache-and-storage-connector-template/issues"
+  },
+  "homepage": "http://deepstream.io",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-release": "0.9.0",
+    "jasmine-node": "1.14.5"
+  }
+}
