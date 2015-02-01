@@ -2,6 +2,7 @@ var events = require( 'events' ),
 	util = require( 'util' ),
 	rethinkdb = require( 'rethinkdb' ),
 	Connection = require( './connection' ),
+	Insertion = require( './insertion' ),
 	pckg = require( '../package.json' ),
 	PRIMARY_KEY = 'ds_id';
 
@@ -51,30 +52,7 @@ util.inherits( Connector, events.EventEmitter );
  * @returns {void}
  */
 Connector.prototype.set = function( key, value, callback ) {
-	var params = this._getParams( key ),
-		tableOptions = { primaryKey: PRIMARY_KEY, durability: 'soft' },
-		insert = function() {
-			rethinkdb.table( params.table ).insert( value ).run( this._connection.get(), callback );
-		}.bind( this );
-	
-	value[ PRIMARY_KEY ] = params.id;
-	
-	if( this._connection.hasTable( params.table ) ) {
-		insert();
-	} else {
-		rethinkdb.tableCreate( params.table, tableOptions ).run( this._connection.get(), function( error ){
-			if( error ) {
-				if( error.msg.indexOf( 'already exists' ) === -1 ) {
-					callback( error );
-				} else {
-					this._connection.refreshTables();
-					insert();
-				}
-			} else {
-				insert();
-			}
-		});
-	}
+	new Insertion( this._getParams( key ), value, callback, this._connection );
 };
 
 /**
