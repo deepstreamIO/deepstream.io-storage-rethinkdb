@@ -4,7 +4,7 @@ module.exports = function(grunt) {
 		release: {
 			options: {
 				github: { 
-					repo: 'hoxton-one/deepstream.io-cache-and-storage-connector-template',
+					repo: 'hoxton-one/deepstream.io-storage-rethinkdb',
 					usernameVar: 'GITHUB_USERNAME',
 					passwordVar: 'GITHUB_PASSWORD'
 				}

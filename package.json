@@ -1,22 +1,25 @@
 {
-  "name": "deepstream.io-cache-and-storage-connector-template",
-  "version": "0.2.0",
-  "description": "A template that can be forked to create new cache and storage connectors for deepstream.io",
+  "name": "deepstream.io-storage-rethinkdb",
+  "version": "0.0.1",
+  "description": "Connects deepstream.io to rethinkdb",
   "main": "src/connector.js",
   "scripts": {
     "test": "node node_modules/jasmine-node/lib/jasmine-node/cli.js test --autotest --watch ./src"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/hoxton-one/deepstream.io-cache-and-storage-connector-template.git"
+    "url": "https://github.com/hoxton-one/deepstream.io-storage-rethinkdb.git"
   },
   "author": "Wolfram Hempel",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hoxton-one/deepstream.io-cache-and-storage-connector-template/issues"
+    "url": "https://github.com/hoxton-one/deepstream.io-storage-rethinkdb/issues"
   },
   "homepage": "http://deepstream.io",
-  "dependencies": {},
+  "dependencies": {
+    "rethinkdb": "1.15.0",
+    "bluebird": ">= 1.2.1"
+  },
   "devDependencies": {
     "grunt": "~0.4.5",
     "grunt-release": "0.9.0",

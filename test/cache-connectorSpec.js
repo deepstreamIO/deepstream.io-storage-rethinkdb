@@ -1,11 +1,12 @@
 /* global describe, expect, it, jasmine */
 var CacheConnector = require( '../src/connector' ),
 	EventEmitter = require( 'events' ).EventEmitter,
-	settings = { port: 6379, host: 'localhost' },
+	settings = { port: 28015, host: 'localhost' },
 	MESSAGE_TIME = 20;
 
 describe( 'the message connector has the correct structure', function(){
 	var cacheConnector;
+	
 	it( 'throws an error if required connection parameters are missing', function(){
 		expect(function(){ new CacheConnector( 'gibberish' ); }).toThrow();
 	});
