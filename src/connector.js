@@ -6,26 +6,37 @@ var events = require( 'events' ),
 	pckg = require( '../package.json' ),
 	PRIMARY_KEY = 'ds_id';
 
-/*
- * @param {Object} options rethinkdb driver options. See http://www.rethinkdb.com/api/javascript/
+/**
+ * Connects deepstream to a rethinkdb. RethinksDB is a great fit for deepstream due to its realtime capabilities.
+ *
+ * Similar to other storage connectors (e.g. MongoDB), this connector supports saving records to multiple tables.
+ * In order to do this, specify a splitChar, e.g. '/' and use it in your record names. Naming your record
+ *
+ * user/i4vcg5j1-16n1qrnziuog
+ *
+ * for instance will create a user table and store it in it. This will allow for more sophisticated queries as
+ * well as speed up read operations since there are less entries to look through
+ *
+ * @param {Object} options rethinkdb driver options. See rethinkdb.com/api/javascript/#connect
  * 
  * e.g.
  * 
  * { 
- *	host: 'localhost',
- *	port: 28015,
- *	db: 'marvel',
- *	authKey: 'hunter2' 
+ *	   host: 'localhost',
+ *	   port: 28015,
+ *	   db: 'marvel',
+ *	   authKey: 'hunter2' 
+ *     database: 'deepstream', 
+ *	   defaultTable: 'deepstream_records',
+ *	   splitChar: '/'
+ * }
  *
- *	// Optional database
- * database: <String>,
- *    // Optional: Collections for items without a splitChar or if no splitChar is specified. Defaults to 'deepstream_records'
- 	 defaultTable: <String>,
- 	 
- 	 // Optional: A char that seperates the collection name from the document id. Defaults to null
- 	 splitChar: <String>
- 	 
-   }
+ * Please note the three additional, optional keys:
+ * 
+ * database 	specifies which database to use. Defaults to 'deepstream'
+ * defaultTable specifies which table records will be stored in that don't specify a table. Defaults to deepstream_records
+ * splitChar 	specifies a character that separates the record's id from the table it should be stored in. defaults to null
+ * 
  * @constructor
  */
 var Connector = function( options ) {
@@ -42,13 +53,13 @@ var Connector = function( options ) {
 util.inherits( Connector, events.EventEmitter );
 
 /**
- * Writes a value to the cache.
+ * Writes a value to the database.
  *
  * @param {String}   key
  * @param {Object}   value
- * @param {Function} callback Should be called with null for successful set operations or with an error message string
+ * @param {Function} callback Will be called with null for successful set operations or with an error message string
  *
- * @private
+ * @public
  * @returns {void}
  */
 Connector.prototype.set = function( key, value, callback ) {
@@ -62,7 +73,7 @@ Connector.prototype.set = function( key, value, callback ) {
  * @param {Function} callback Will be called with null and the stored object
  *                            for successful operations or with an error message string
  *
- * @private
+ * @public
  * @returns {void}
  */
 Connector.prototype.get = function( key, callback ) {
@@ -87,7 +98,7 @@ Connector.prototype.get = function( key, callback ) {
  * @param   {Function} callback Will be called with null for successful deletions or with
  *                     an error message string
  *
- * @private
+ * @public
  * @returns {void}
  */
 Connector.prototype.delete = function( key, callback ) {
@@ -100,6 +111,14 @@ Connector.prototype.delete = function( key, callback ) {
 	}
 };
 
+/**
+ * Callback for established connections
+ *
+ * @param   {Error} error
+ *
+ * @private
+ * @returns {void}
+ */
 Connector.prototype._onConnection = function( error ) {
 	if( error ) {
 		this.emit( 'error', error );
@@ -110,6 +129,15 @@ Connector.prototype._onConnection = function( error ) {
 	}
 };
 
+/**
+ * Parses the provided record name and returns an object
+ * containing a table name and a record name
+ *
+ * @param   {String} key the name of the record
+ *
+ * @private
+ * @returns {Object} params
+ */
 Connector.prototype._getParams = function( key ) {
 	var parts = key.split( this._splitChar );
 	
@@ -120,6 +148,15 @@ Connector.prototype._getParams = function( key ) {
 	}
 };
 
+/**
+ * Makes sure that the options object contains all mandatory
+ * settings
+ *
+ * @param   {Object} options
+ *
+ * @private
+ * @returns {void}
+ */
 Connector.prototype._checkOptions = function( options ) {
 	if( typeof options.host !== 'string' ) {
 		throw new Error( 'Missing option host' );
