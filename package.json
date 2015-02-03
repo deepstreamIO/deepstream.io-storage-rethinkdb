@@ -17,8 +17,7 @@
   },
   "homepage": "http://deepstream.io",
   "dependencies": {
-    "rethinkdb": "1.15.0",
-    "bluebird": ">= 1.2.1"
+    "rethinkdb": "1.15.0"
   },
   "devDependencies": {
     "grunt": "~0.4.5",
