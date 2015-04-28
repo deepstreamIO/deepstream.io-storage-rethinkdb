@@ -93,15 +93,11 @@ Insertion.prototype._createTable = function() {
  * @returns {void}
  */
 Insertion.prototype._onTableCreated = function( error ) {
-	if( error ) {
-		if( this._isTableExistsError( error ) ) {
-			this._connection.refreshTables();
-			this._insert();
-		} else {
-			this._callback( error );
-			this._destroy();
-		}
+	if( error && this._isTableExistsError( error ) === false ) {
+		this._callback( error );
+		this._destroy();
 	} else {
+		this._connection.refreshTables();
 		this._insert();
 	}
 };
