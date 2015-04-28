@@ -1,7 +1,7 @@
 /* global describe, expect, it, jasmine */
 var CacheConnector = require( '../src/connector' ),
 	EventEmitter = require( 'events' ).EventEmitter,
-	settings = { port: 28015, host: 'localhost' },
+	connectionParams = require( './connection-params' ),
 	MESSAGE_TIME = 20;
 
 describe( 'the message connector has the correct structure', function(){
@@ -12,9 +12,12 @@ describe( 'the message connector has the correct structure', function(){
 	});
 	
 	it( 'creates the cacheConnector', function( done ){
-		cacheConnector = new CacheConnector( settings );
+		cacheConnector = new CacheConnector({ host: connectionParams.host, port: connectionParams.port });
 		expect( cacheConnector.isReady ).toBe( false );
 		cacheConnector.on( 'ready', done );
+		cacheConnector.on( 'error', function( error ){
+			console.log( error );
+		});
 	});
 	
 	it( 'implements the cache/storage connector interface', function() {
