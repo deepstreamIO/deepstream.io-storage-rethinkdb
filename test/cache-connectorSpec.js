@@ -51,6 +51,21 @@ describe( 'the message connector has the correct structure', function(){
 			done();
 		});
 	});
+
+	it( 'updates an existing value', function( done ){
+		cacheConnector.set( 'someValue', { firstname: 'Egon' }, function( error ){
+			expect( error ).toBe( null );
+			done();
+		});
+	});
+
+	it( 'retrieves the updated value', function( done ){
+		cacheConnector.get( 'someValue', function( error, value ){
+			expect( error ).toBe( null );
+			expect( value ).toEqual( { firstname: 'Egon' } );
+			done();
+		});
+	});
 	
 	it( 'deletes a value', function( done ){
 		cacheConnector.delete( 'someValue', function( error ){

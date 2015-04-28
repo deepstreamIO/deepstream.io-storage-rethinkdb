@@ -33,7 +33,7 @@ describe( 'it distributes records between multiple tables', function(){
 	});
 	
 	it( 'resets the table cache', function(done) {
-		cacheConnector._connection.refreshTables();
+		cacheConnector._tableManager.refreshTables();
 		setTimeout( done, 50 );
 	});
 	
@@ -123,5 +123,27 @@ describe( 'it distributes records between multiple tables', function(){
 				expect( entries ).toEqual( [ { ds_id: 'someValue', isIn: 'default' } ] );
 				done();
 			});
+	});
+
+
+	it( 'creates and immediatly updates a value for a new table', function( done ){
+		var firstInsertionComplete = false;
+
+		cacheConnector.set( 'dsTestC/someTest', { state: 'A' }, function( error ){
+			expect( firstInsertionComplete ).toBe( false );
+			expect( error ).toBe( null );
+			firstInsertionComplete = true;
+		});
+
+		cacheConnector.set( 'dsTestC/someTest', { state: 'B' }, function( error ){
+			expect( firstInsertionComplete ).toBe( true );
+			expect( error ).toBe( null );
+
+			cacheConnector.get( 'dsTestC/someTest', function( error, value ){
+				expect( error ).toBe( null );
+				expect( value ).toEqual({ state: 'B' });
+				done();
+			});
+		});
 	});
 });

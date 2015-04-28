@@ -14,7 +14,6 @@ var Connection = function( options, callback ) {
 	this._options = options;
 	this._callback = callback;
 	this._connection = null;
-	this._tables = [];
 	this._database = options.database || 'deepstream';
 	rethinkdb.connect( options, this._fn( this._onConnection ) );
 };
@@ -27,34 +26,6 @@ var Connection = function( options, callback ) {
  */
 Connection.prototype.get = function() {
 	return this._connection;	
-};
-
-/**
- * Checks if a specific table name exists. The list of tables is retrieved
- * on initialisation and can be updated at runtime using refreshTables
- *
- * @param   {String}  table the name of the table
- *
- * @public
- * @returns {Boolean} hasTable
- */
-Connection.prototype.hasTable = function( table ) {
-	return this._tables.indexOf( table ) !== -1;
-};
-
-/**
- * Called whenever the list of tables has gotten out of sync. E.g. after
- * receiving a "table exists"
- *
- * @public
- * @returns {void}
- */
-Connection.prototype.refreshTables = function() {
-	rethinkdb
-		.tableList()
-		.run( this._connection )
-		.bind( this )
-		.then( function( tables ){ this._tables = tables; });
 };
 
 /**
@@ -99,20 +70,6 @@ Connection.prototype._onDbList = function( dbList ) {
  */
 Connection.prototype._onDb = function() {
 	this._connection.use( this._database );
-	rethinkdb.tableList().run( this._connection, this._fn( this._onTableList ) );
-};
-
-/**
- * Callback for retrieved table lists. This marks the final step
- * in establishing a connection
- *
- * @param   {Array} tableList   A list of tablenames
- *
- * @private
- * @returns {void}
- */
-Connection.prototype._onTableList = function( tableList ) {
-	this._tables = tableList;
 	this._callback( null );
 };
 

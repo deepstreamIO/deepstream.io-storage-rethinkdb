@@ -2,9 +2,9 @@ var events = require( 'events' ),
 	util = require( 'util' ),
 	rethinkdb = require( 'rethinkdb' ),
 	Connection = require( './connection' ),
-	Insertion = require( './insertion' ),
+	TableManager = require( './table-manager' ),
 	pckg = require( '../package.json' ),
-	PRIMARY_KEY = 'ds_id';
+	PRIMARY_KEY = require( './primary-key');
 
 /**
  * Connects deepstream to a rethinkdb. RethinksDB is a great fit for deepstream due to its realtime capabilities.
@@ -46,6 +46,7 @@ var Connector = function( options ) {
 	this._checkOptions( options );
 	this._options = options;
 	this._connection = new Connection( options, this._onConnection.bind( this ) );
+	this._tableManager = new TableManager( this._connection );
 	this._defaultTable = options.defaultTable || 'deepstream_records';
 	this._splitChar = options.splitChar || null;
 };
@@ -53,7 +54,9 @@ var Connector = function( options ) {
 util.inherits( Connector, events.EventEmitter );
 
 /**
- * Writes a value to the database.
+ * Writes a value to the database. If the specified table doesn't exist yet, it will be created
+ * before the write is excecuted. If a table creation is already in progress, create table will
+ * only add the method to its array of callbacks
  *
  * @param {String}   key
  * @param {Object}   value
@@ -63,7 +66,14 @@ util.inherits( Connector, events.EventEmitter );
  * @returns {void}
  */
 Connector.prototype.set = function( key, value, callback ) {
-	new Insertion( this._getParams( key ), value, callback, this._connection );
+	var params = this._getParams( key ),
+		insert = this._insert.bind( this, params, value, callback );
+	
+	if( this._tableManager.hasTable( params.table ) ) {
+		insert();
+	} else {
+		this._tableManager.createTable( params.table, insert );
+	}
 };
 
 /**
@@ -79,7 +89,7 @@ Connector.prototype.set = function( key, value, callback ) {
 Connector.prototype.get = function( key, callback ) {
 	var params = this._getParams( key );
 	
-	if( this._connection.hasTable( params.table ) ) {
+	if( this._tableManager.hasTable( params.table ) ) {
 		rethinkdb.table( params.table ).get( params.id ).run( this._connection.get(), function( error, entry ){
 			if( entry ) {
 				delete entry[ PRIMARY_KEY ];
@@ -104,7 +114,7 @@ Connector.prototype.get = function( key, callback ) {
 Connector.prototype.delete = function( key, callback ) {
 	var params = this._getParams( key );
 	
-	if( this._connection.hasTable( params.table ) ) {
+	if( this._tableManager.hasTable( params.table ) ) {
 		rethinkdb.table( params.table ).get( params.id ).delete().run( this._connection.get(), callback );
 	} else {
 		callback( new Error( 'Table \'' + params.table + '\' does not exist' ) );
@@ -122,10 +132,11 @@ Connector.prototype.delete = function( key, callback ) {
 Connector.prototype._onConnection = function( error ) {
 	if( error ) {
 		this.emit( 'error', error );
-	}
-	else {
-		this.isReady = true;
-		this.emit( 'ready' );
+	} else {
+		this._tableManager.refreshTables(function(){
+			this.isReady = true;
+			this.emit( 'ready' );
+		}.bind( this ));
 	}
 };
 
@@ -146,6 +157,25 @@ Connector.prototype._getParams = function( key ) {
 	} else {
 		return { table: this._defaultTable, id: key };
 	}
+};
+
+/**
+ * Augments a value with a primary key and writes it to the database
+ *
+ * @param   {Object} params Map in the format { table: String, id: String }
+ * @param   {Object} value The value that will be written
+ * @param   {Function} callback called with error or null
+ *
+ * @private
+ * @returns {void}
+ */
+Connector.prototype._insert = function( params, value, callback ) {
+	value[ PRIMARY_KEY ] = params.id;
+
+	rethinkdb
+		.table( params.table )
+		.insert( value, { returnChanges: false, conflict: 'replace' } )
+		.run( this._connection.get(), callback );
 };
 
 /**
