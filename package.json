@@ -17,7 +17,7 @@
   },
   "homepage": "http://deepstream.io",
   "dependencies": {
-    "rethinkdb": "1.15.0"
+    "rethinkdb": "2.0.0"
   },
   "devDependencies": {
     "grunt": "~0.4.5",
