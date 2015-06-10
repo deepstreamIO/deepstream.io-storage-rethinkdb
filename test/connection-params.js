@@ -1,2 +1,2 @@
-exports.host = '192.168.56.101';
+exports.host = 'localhost';
 exports.port = 28015;
