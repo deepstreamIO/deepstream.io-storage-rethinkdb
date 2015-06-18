@@ -24,8 +24,7 @@ var events = require( 'events' ),
  * { 
  *	   host: 'localhost',
  *	   port: 28015,
- *	   db: 'marvel',
- *	   authKey: 'hunter2' 
+ *	   authKey: 'someString' 
  *     database: 'deepstream', 
  *	   defaultTable: 'deepstream_records',
  *	   splitChar: '/'
