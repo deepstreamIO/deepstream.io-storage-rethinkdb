@@ -6,6 +6,7 @@ var TableManager = function( connection ) {
 	this._connection = connection;
 	this._tables = [];
 	this._eventEmitter = new EventEmitter();
+	this._eventEmitter.setMaxListeners( 0 );
 };
 
 /**
