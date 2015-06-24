@@ -1,6 +1,6 @@
 {
   "name": "deepstream.io-storage-rethinkdb",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Connects deepstream.io to rethinkdb",
   "main": "src/connector.js",
   "scripts": {
