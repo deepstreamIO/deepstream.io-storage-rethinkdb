@@ -1,6 +1,5 @@
 var EventEmitter = require( 'events' ).EventEmitter,
-	rethinkdb = require( 'rethinkdb' ),
-	PRIMARY_KEY = require( './primary-key' );
+	rethinkdb = require( 'rethinkdb' );
 
 var TableManager = function( connection ) {
 	this._connection = connection;
@@ -15,12 +14,12 @@ var TableManager = function( connection ) {
  * @private
  * @returns {void}
  */
-TableManager.prototype.createTable = function( table, callback ) {
+TableManager.prototype.createTable = function( table, primary_key, callback ) {
 	this._eventEmitter.once( table, callback );
 
 	if( this._eventEmitter.listeners( table ).length === 1 ) {
 		rethinkdb
-			.tableCreate( table, { primaryKey: PRIMARY_KEY, durability: 'soft' } )
+			.tableCreate( table, { primaryKey: primary_key, durability: 'soft' } )
 			.run( this._connection.get(), this._onTableCreated.bind( this, table ) );
 	}
 };
