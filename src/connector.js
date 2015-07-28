@@ -48,6 +48,7 @@ var Connector = function( options ) {
 	this._tableManager = new TableManager( this._connection );
 	this._defaultTable = options.defaultTable || 'deepstream_records';
 	this._splitChar = options.splitChar || null;
+	this._primaryKey = options.primaryKey || PRIMARY_KEY;
 };
 
 util.inherits( Connector, events.EventEmitter );
@@ -71,7 +72,7 @@ Connector.prototype.set = function( key, value, callback ) {
 	if( this._tableManager.hasTable( params.table ) ) {
 		insert();
 	} else {
-		this._tableManager.createTable( params.table, insert );
+		this._tableManager.createTable( params.table, this._primaryKey, insert );
 	}
 };
 
@@ -91,10 +92,10 @@ Connector.prototype.get = function( key, callback ) {
 	if( this._tableManager.hasTable( params.table ) ) {
 		rethinkdb.table( params.table ).get( params.id ).run( this._connection.get(), function( error, entry ){
 			if( entry ) {
-				delete entry[ PRIMARY_KEY ];
+				delete entry[ this._primaryKey ];
 			}
 			callback( error, entry );
-		});
+		}.bind(this));
 	} else {
 		callback( null, null );
 	}
@@ -169,7 +170,7 @@ Connector.prototype._getParams = function( key ) {
  * @returns {void}
  */
 Connector.prototype._insert = function( params, value, callback ) {
-	value[ PRIMARY_KEY ] = params.id;
+	value[ this._primaryKey ] = params.id;
 
 	rethinkdb
 		.table( params.table )
