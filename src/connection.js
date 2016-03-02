@@ -15,6 +15,7 @@ var Connection = function( options, callback ) {
 	this._callback = callback;
 	this._connection = null;
 	this._database = options.database || 'deepstream';
+	options.db = this._database;
 	rethinkdb.connect( options, this._fn( this._onConnection ) );
 };
 
