@@ -8,12 +8,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/hoxton-one/deepstream.io-storage-rethinkdb.git"
+    "url": "https://github.com/deepstreamIO/deepstream.io-storage-rethinkdb.git"
   },
   "author": "Wolfram Hempel",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hoxton-one/deepstream.io-storage-rethinkdb/issues"
+    "url": "https://github.com/deepstreamIO/deepstream.io-storage-rethinkdb/issues"
   },
   "homepage": "http://deepstream.io",
   "dependencies": {
