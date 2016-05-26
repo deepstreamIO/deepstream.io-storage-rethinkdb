@@ -4,13 +4,15 @@
   "description": "Connects deepstream.io to rethinkdb",
   "main": "src/connector.js",
   "scripts": {
-    "test": "node node_modules/jasmine-node/lib/jasmine-node/cli.js test --autotest --watch ./src"
+    "test": "mocha",
+    "coverage": "istanbul cover _mocha",
+    "lint": "eslint \"src/**/*.js\" \"test/**/*.js\""
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/deepstreamIO/deepstream.io-storage-rethinkdb.git"
   },
-  "author": "Wolfram Hempel",
+  "author": "deepstreamHub GmbH",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/deepstreamIO/deepstream.io-storage-rethinkdb/issues"
@@ -20,8 +22,11 @@
     "rethinkdb": "2.0.0"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^2.10.2",
     "grunt": "~0.4.5",
     "grunt-release": "0.9.0",
-    "jasmine-node": "1.14.5"
+    "istanbul": "^0.4.3",
+    "mocha": "^2.5.2"
   }
 }

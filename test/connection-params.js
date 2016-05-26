@@ -1,2 +1,2 @@
-exports.host = process.env.RETHINKDB_HOST || 'localhost';
-exports.port = 28015;
+exports.host = process.env.RETHINKDB_HOST || 'localhost'
+exports.port = 28015

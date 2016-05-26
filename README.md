@@ -1,4 +1,9 @@
-# deepstream.io-storage-rethinkdb [![npm version](https://badge.fury.io/js/deepstream.io-storage-rethinkdb.svg)](http://badge.fury.io/js/deepstream.io-storage-rethinkdb)
+# deepstream.io-storage-rethinkdb
+[![Coverage Status](https://coveralls.io/repos/github/deepstreamIO/deepstream.io-storage-rethinkdb/badge.svg?branch=master)](https://coveralls.io/github/deepstreamIO/deepstream.io-storage-rethinkdb?branch=master)
+[![npm](https://img.shields.io/npm/v/deepstream.io-storage-rethinkdb.svg)](https://www.npmjs.com/package/deepstream.io-storage-rethinkdb)
+[![Dependency Status](https://david-dm.org/deepstreamIO/deepstream.io-storage-rethinkdb.svg)](https://david-dm.org/deepstreamIO/deepstream.io-storage-rethinkdb)
+[![devDependency Status](https://david-dm.org/deepstreamIO/deepstream.io-storage-rethinkdb/dev-status.svg)](https://david-dm.org/deepstreamIO/deepstream.io-storage-rethinkdb#info=devDependencies)
+[![devDependency Status](https://david-dm.org/deepstreamIO/deepstream.io-storage-rethinkdb/dev-status.svg)](https://david-dm.org/deepstreamIO/deepstream.io-storage-rethinkdb#info=devDependencies)
 
 [deepstream](http://deepstream.io) storage connector for [rethinkdb](http://rethinkdb.com/)
 
@@ -24,7 +29,7 @@ This connector uses [the npm rethinkdb package](https://www.npmjs.com/package/re
 
 	/* (Optional) A character that's used as part of the
 	* record names to split it into a tabel and an id part, e.g.
-	* 
+	*
 	* books/dream-of-the-red-chamber
 	*
 	* would create a table called 'books' and store the record under the name
@@ -40,9 +45,9 @@ var Deepstream = require( 'deepstream.io' ),
     RethinkDBStorageConnector = require( 'deepstream.io-storage-rethinkdb' ),
     server = new Deepstream();
 
-server.set( 'storage', new RethinkDBStorageConnector( { 
-  port: 5672, 
-  host: 'localhost' 
+server.set( 'storage', new RethinkDBStorageConnector( {
+  port: 5672,
+  host: 'localhost'
 }));
 
 server.start();

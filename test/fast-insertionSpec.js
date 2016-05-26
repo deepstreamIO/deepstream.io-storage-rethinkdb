@@ -1,51 +1,58 @@
-/* global describe, expect, it, jasmine */
-var StorageConnector = require( '../src/connector' ),
-	connectionParams = require( './connection-params' ),
-	rethinkdb = require( 'rethinkdb' ),
-	settings = { port: connectionParams.port, host: connectionParams.host, splitChar: '/', defaultTable: 'dsTestDefault' },
-	MESSAGE_TIME = 50;
+/*  global  describe,  expect,  it,  jasmine  */
+'use strict'
 
-describe( 'Is able to insert a larger number of values in quick succession', function(){
-	var storageConnector,
-		conn;
+const expect = require('chai').expect
+const StorageConnector = require( '../src/connector' )
+const connectionParams = require( './connection-params' )
+const rethinkdb = require( 'rethinkdb' )
+const settings = {
+  port: connectionParams.port,
+  host: connectionParams.host,
+  splitChar: '/',
+  defaultTable: 'dsTestDefault'
+}
+const MESSAGE_TIME = 50
+var storageConnector
 
-	it( 'creates the storageConnector', function( done ){
-		storageConnector = new StorageConnector( settings );
-		expect( storageConnector.isReady ).toBe( false );
-		storageConnector.on( 'ready', done );
-		storageConnector.on( 'error', function( error ){
-			console.log( error );
-		});
-	});
+describe( 'Is able to insert a larger number of values in quick succession', () => {
 
-	it( 'inserts 20 values in quick succession', function( done ){
-		var expected = 20;
-		var completed = 0;
+  it( 'creates the storageConnector', ( done ) => {
+    storageConnector = new StorageConnector( settings )
+    expect( storageConnector.isReady ).to.equal( false )
+    storageConnector.on( 'ready', done )
+    storageConnector.on( 'error', ( error ) => {
+      console.log( error )
+    })
+  })
 
-		var callback = function( err ) {
-			completed++;
-			expect( err ).toBe( null );
+  it( 'inserts 20 values in quick succession', ( done ) => {
+    var expected = 20
+    var completed = 0
 
-			if( expected === completed ) {
-				done();
-			}
-		};
+    var callback = ( err ) =>  {
+      completed++
+      expect( err ).to.equal( null )
 
-		expect(function(){
-			 for( var i = 0; i < expected; i++ ) {
-				storageConnector.set( 'quickInsertTestTable/key' + i, { testVal: i }, callback );
-			}
-		}).not.toThrow();
-		expect( storageConnector._tableManager._eventEmitter.listeners( 'quickInsertTestTable' ).length ).toBe( 20 );
-	});
+      if( expected === completed ) {
+        done()
+      }
+    }
 
-	it( 'does not have leftover listeners', function(){
-		expect( storageConnector._tableManager._eventEmitter.listeners( 'quickInsertTestTable' ).length ).toBe( 0 );
-	});
+    expect(() => {
+      for( var i = 0; i < expected; i++ ) {
+        storageConnector.set( 'quickInsertTestTable/key' + i, { testVal: i }, callback )
+      }
+    }).not.to.throw()
+    expect( storageConnector._tableManager._eventEmitter.listeners( 'quickInsertTestTable' ).length ).to.equal( 20 )
+  })
 
-	it( 'deletes dsTestA', function( done ){
-		conn = storageConnector._connection.get();
-		rethinkdb.tableDrop( 'quickInsertTestTable' ).run(conn, function(){ done(); });
-	});
-});
+  it( 'does not have leftover listeners', () => {
+    expect( storageConnector._tableManager._eventEmitter.listeners( 'quickInsertTestTable' ).length ).to.equal( 0 )
+  })
+
+  it( 'deletes dsTestA', ( done ) => {
+    conn = storageConnector._connection.get()
+    rethinkdb.tableDrop( 'quickInsertTestTable' ).run(conn, () => { done() } )
+  })
+})
 

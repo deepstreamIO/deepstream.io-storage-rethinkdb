@@ -3,8 +3,8 @@ module.exports = function(grunt) {
 		pkg: grunt.file.readJSON( 'package.json' ),
 		release: {
 			options: {
-				github: { 
-					repo: 'hoxton-one/deepstream.io-storage-rethinkdb',
+				github: {
+					repo: 'deepstreamIO/deepstream.io-storage-rethinkdb',
 					usernameVar: 'GITHUB_USERNAME',
 					passwordVar: 'GITHUB_PASSWORD'
 				}
