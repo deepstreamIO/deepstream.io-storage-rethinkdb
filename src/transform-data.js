@@ -10,7 +10,7 @@
  * @private
  * @returns {Object} data
  */
-module.exports = function transformValueForStorage( value ) {
+module.exports.transformValueForStorage = function ( value ) {
 	var data = value._d;
 	delete value._d;
 	data.__ds = value;
@@ -27,7 +27,7 @@ module.exports = function transformValueForStorage( value ) {
  * @private
  * @returns {Object} data
  */
-module.exports = function transformValueFromStorage = function( value ) {
+module.exports.transformValueFromStorage = function( value ) {
 	var data = value.__ds;
 	delete value.__ds;
 	data._d = value;

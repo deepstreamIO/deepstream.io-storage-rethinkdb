@@ -38,7 +38,7 @@ describe( 'the message connector has the correct structure', function(){
 	});
 
 	it( 'sets a value', function( done ){
-		cacheConnector.set( 'someValue', { firstname: 'Wolfram' }, function( error ){
+		cacheConnector.set( 'someValue', { _d: { firstname: 'Wolfram' } }, function( error ){
 			expect( error ).toBe( null );
 			done();
 		});
@@ -47,13 +47,13 @@ describe( 'the message connector has the correct structure', function(){
 	it( 'retrieves an existing value', function( done ){
 		cacheConnector.get( 'someValue', function( error, value ){
 			expect( error ).toBe( null );
-			expect( value ).toEqual( { firstname: 'Wolfram' } );
+			expect( value ).toEqual( { _d: { firstname: 'Wolfram' } } );
 			done();
 		});
 	});
 
 	it( 'updates an existing value', function( done ){
-		cacheConnector.set( 'someValue', { firstname: 'Egon' }, function( error ){
+		cacheConnector.set( 'someValue', { _d: { firstname: 'Egon' } }, function( error ){
 			expect( error ).toBe( null );
 			done();
 		});
@@ -62,7 +62,7 @@ describe( 'the message connector has the correct structure', function(){
 	it( 'retrieves the updated value', function( done ){
 		cacheConnector.get( 'someValue', function( error, value ){
 			expect( error ).toBe( null );
-			expect( value ).toEqual( { firstname: 'Egon' } );
+			expect( value ).toEqual( { _d : { firstname: 'Egon' } } );
 			done();
 		});
 	});

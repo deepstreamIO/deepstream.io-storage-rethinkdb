@@ -1,18 +1,23 @@
 /* global describe, expect, it, jasmine */
 var CacheConnector = require( '../src/connector' ),
 	EventEmitter = require( 'events' ).EventEmitter,
+	rethinkdb = require( 'rethinkdb' );
 	connectionParams = require( './connection-params' ),
 	MESSAGE_TIME = 20;
 
 describe( 'the message connector has the correct structure', function(){
 	var cacheConnector;
 
+	// beforeAll( function( done ) {
+	// 	rethinkdb.connect( options, this._fn( this._onConnection ) );
+	// } );
+
 	it( 'throws an error if required connection parameters are missing', function(){
 		expect(function(){ new CacheConnector( 'gibberish' ); }).toThrow();
 	});
 
 	it( 'creates the cacheConnector', function( done ){
-		cacheConnector = new CacheConnector({ host: connectionParams.host, port: connectionParams.port });
+		cacheConnector = new CacheConnector( connectionParams );
 		expect( cacheConnector.isReady ).toBe( false );
 		cacheConnector.on( 'ready', done );
 		cacheConnector.on( 'error', function( error ){
@@ -38,7 +43,7 @@ describe( 'the message connector has the correct structure', function(){
 	});
 
 	it( 'sets a value', function( done ){
-		cacheConnector.set( 'someValue', { firstname: 'Wolfram' }, function( error ){
+		cacheConnector.set( 'someValue', { _d: { firstname: 'Wolfram' } }, function( error ){
 			expect( error ).toBe( null );
 			done();
 		});
@@ -47,13 +52,13 @@ describe( 'the message connector has the correct structure', function(){
 	it( 'retrieves an existing value', function( done ){
 		cacheConnector.get( 'someValue', function( error, value ){
 			expect( error ).toBe( null );
-			expect( value ).toEqual( { firstname: 'Wolfram' } );
+			expect( value ).toEqual( { _d: { firstname: 'Wolfram' } } );
 			done();
 		});
 	});
 
 	it( 'updates an existing value', function( done ){
-		cacheConnector.set( 'someValue', { firstname: 'Egon' }, function( error ){
+		cacheConnector.set( 'someValue', { _d: { firstname: 'Egon' } }, function( error ){
 			expect( error ).toBe( null );
 			done();
 		});
@@ -62,7 +67,7 @@ describe( 'the message connector has the correct structure', function(){
 	it( 'retrieves the updated value', function( done ){
 		cacheConnector.get( 'someValue', function( error, value ){
 			expect( error ).toBe( null );
-			expect( value ).toEqual( { firstname: 'Egon' } );
+			expect( value ).toEqual( { _d: { firstname: 'Egon' } } );
 			done();
 		});
 	});
