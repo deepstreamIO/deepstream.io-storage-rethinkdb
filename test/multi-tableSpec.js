@@ -29,7 +29,7 @@ describe(  'it  distributes  records  between  multiple  tables',  () => {
 
   it(  'deletes  dsTestA',  (  done  ) => {
     conn  =  cacheConnector._connection.get()
-    rethinkdb.tableDrop(  'dsTestA'  ).run(conn, done )
+    rethinkdb.tableDrop(  'dsTestA'  ).run(conn, () => { done() } )
   })
 
   it(  'deletes  dsTestB',  (  done  ) => {
@@ -37,7 +37,7 @@ describe(  'it  distributes  records  between  multiple  tables',  () => {
   })
 
   it(  'deletes  dsTestB',  (  done  ) => {
-    rethinkdb.tableDrop(  'dsTestDefault'  ).run(conn, done())
+    rethinkdb.tableDrop(  'dsTestDefault'  ).run(conn, () => { done() })
   })
 
   it(  'resets  the  table  cache',  (done) =>   {

@@ -7,7 +7,7 @@ const EventEmitter = require( 'events' ).EventEmitter
 const connectionParams = require( './connection-params' )
 const MESSAGE_TIME = 20
 
-describe.only( 'the message connector has the correct structure', () =>  {
+describe( 'the message connector has the correct structure', () =>  {
   var cacheConnector
 
   it( 'throws an error if required connection parameters are missing', () => {
@@ -18,8 +18,8 @@ describe.only( 'the message connector has the correct structure', () =>  {
     cacheConnector = new CacheConnector( {
       host: connectionParams.host,
       port: connectionParams.port,
-      primaryKey: 'own-primary-key' }
-    )
+      primaryKey: 'own-primary-key'
+    } )
     expect( cacheConnector.isReady ).to.equal( false )
     cacheConnector.on( 'ready', done )
     cacheConnector.on( 'error', ( error ) => {
