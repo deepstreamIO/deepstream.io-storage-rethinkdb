@@ -18,6 +18,7 @@ describe( 'the message connector has the correct structure', () =>  {
     cacheConnector = new CacheConnector( {
       host: connectionParams.host,
       port: connectionParams.port,
+      database: connectionParams.database + 2,
       primaryKey: 'own-primary-key'
     } )
     expect( cacheConnector.isReady ).to.equal( false )

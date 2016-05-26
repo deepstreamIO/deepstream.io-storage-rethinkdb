@@ -10,7 +10,8 @@ const  settings  =  {
   port:  connectionParams.port,
   host:  connectionParams.host,
   splitChar:  '/',
-  defaultTable:  'dsTestDefault'
+  defaultTable:  'dsTestDefault',
+  database: 'deepstream_storage_provider_test'
 }
 const  MESSAGE_TIME  =  20
 
@@ -55,8 +56,8 @@ describe(  'it  distributes  records  between  multiple  tables',  () => {
     })
   })
 
-  it(  'sets  a  value  for  tableA',  (done) =>   {
-    cacheConnector.set(  'dsTestA/valueA',  {  isIn:  'tableA'  },  done  )
+  it(  'sets  a  value  for  tableA',  ( done ) =>   {
+    cacheConnector.set(  'dsTestA/valueA',  { _d: {  isIn:  'tableA'  } },  () => { done() }  )
   })
 
   it(  'has  created  tableA',  (done) =>   {
@@ -76,13 +77,13 @@ describe(  'it  distributes  records  between  multiple  tables',  () => {
     })
     .then((  entries  ) => {
       expect(  entries.length  ).to.equal(  1  )
-      expect(  entries  ).to.equal(  [  {  ds_id:  'valueA',  isIn:  'tableA'  }  ]  )
+      expect(  entries  ).to.deep.equal(  [  {  __ds: {}, ds_id:  'valueA',  isIn:  'tableA'  }  ]  )
       done()
     })
   })
 
   it(  'sets  a  value  for  tableB',  (done) =>   {
-    cacheConnector.set(  'dsTestB/valueB',  {  isIn:  'tableB'  },  done  )
+    cacheConnector.set(  'dsTestB/valueB',  { _d: {  isIn:  'tableB'  } },  done  )
   })
 
   it(  'has  created  tableB',  (done) =>   {
@@ -102,13 +103,13 @@ describe(  'it  distributes  records  between  multiple  tables',  () => {
     })
     .then((  entries  ) => {
       expect(  entries.length  ).to.equal(  1  )
-      expect(  entries  ).to.equal(  [  {  ds_id:  'valueB',  isIn:  'tableB'  }  ]  )
+      expect(  entries  ).to.deep.equal(  [  {  __ds: {}, ds_id:  'valueB',  isIn:  'tableB'  }  ]  )
       done()
     })
   })
 
   it(  'sets  a  value  without  a  table',  (done) =>   {
-    cacheConnector.set(  'someValue',  {  isIn:  'default'  },  done  )
+    cacheConnector.set(  'someValue',  { _d: {  isIn:  'default'  } },  done  )
   })
 
   it(  'has  created  the  defaultTable',  (done) =>   {
@@ -128,7 +129,7 @@ describe(  'it  distributes  records  between  multiple  tables',  () => {
     })
     .then((  entries  ) => {
       expect(  entries.length  ).to.equal(  1  )
-      expect(  entries  ).to.equal(  [  {  ds_id:  'someValue',  isIn:  'default'  }  ]  )
+      expect(  entries  ).to.deep.equal(  [  {  __ds:{}, ds_id:  'someValue',  isIn:  'default'  }  ]  )
       done()
     })
   })
@@ -137,19 +138,19 @@ describe(  'it  distributes  records  between  multiple  tables',  () => {
   it(  'creates  and  immediatly  updates  a  value  for  a  new  table',  (  done  ) => {
     var  firstInsertionComplete  =  false
 
-    cacheConnector.set(  'dsTestC/someTest',  {  state:  'A'  },  (  error  ) => {
+    cacheConnector.set(  'dsTestC/someTest',  {  _d: { state:  'A' } },  (  error  ) => {
       expect(  firstInsertionComplete  ).to.equal(  false  )
       expect(  error  ).to.equal(  null  )
       firstInsertionComplete  =  true
     })
 
-    cacheConnector.set(  'dsTestC/someTest',  {  state:  'B'  },  (  error  ) => {
+    cacheConnector.set(  'dsTestC/someTest',  {  _d: { state:  'B' } },  (  error  ) => {
       expect(  firstInsertionComplete  ).to.equal(  true  )
       expect(  error  ).to.equal(  null  )
 
       cacheConnector.get(  'dsTestC/someTest',  (  error,  value  ) => {
         expect(  error  ).to.equal(  null  )
-        expect(  value  ).to.equal({  state:  'B'  })
+        expect(  value  ).to.deep.equal({ _d: {  state:  'B'  } })
         done()
       })
     })

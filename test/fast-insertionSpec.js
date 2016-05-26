@@ -9,7 +9,8 @@ const settings = {
   port: connectionParams.port,
   host: connectionParams.host,
   splitChar: '/',
-  defaultTable: 'dsTestDefault'
+  defaultTable: 'dsTestDefault',
+  database: 'deepstream_storage_provider_test'
 }
 const MESSAGE_TIME = 50
 var storageConnector
@@ -26,6 +27,7 @@ describe( 'Is able to insert a larger number of values in quick succession', () 
   })
 
   it( 'inserts 20 values in quick succession', ( done ) => {
+
     var expected = 20
     var completed = 0
 
@@ -40,7 +42,7 @@ describe( 'Is able to insert a larger number of values in quick succession', () 
 
     expect(() => {
       for( var i = 0; i < expected; i++ ) {
-        storageConnector.set( 'quickInsertTestTable/key' + i, { testVal: i }, callback )
+        storageConnector.set( 'quickInsertTestTable/key' + i, { _d: { testVal: i } }, callback )
       }
     }).not.to.throw()
     expect( storageConnector._tableManager._eventEmitter.listeners( 'quickInsertTestTable' ).length ).to.equal( 20 )
@@ -51,7 +53,7 @@ describe( 'Is able to insert a larger number of values in quick succession', () 
   })
 
   it( 'deletes dsTestA', ( done ) => {
-    conn = storageConnector._connection.get()
+    const conn = storageConnector._connection.get()
     rethinkdb.tableDrop( 'quickInsertTestTable' ).run(conn, () => { done() } )
   })
 })
