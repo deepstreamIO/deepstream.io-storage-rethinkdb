@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Inverts the data from the deepstream structure to reduce nesting.
  *

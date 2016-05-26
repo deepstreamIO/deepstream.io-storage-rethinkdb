@@ -1,3 +1,5 @@
+"use strict";
+
 const rethinkdb = require( 'rethinkdb' );
 
 class Connection {
