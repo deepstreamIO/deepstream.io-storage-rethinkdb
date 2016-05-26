@@ -51,7 +51,7 @@ describe( 'the message connector has the correct structure', () => {
   it( 'retrieves an existing value', ( done ) => {
     cacheConnector.get( 'someValue', ( error, value ) => {
       expect( error ).to.equal( null )
-      expect( value ).to.equal( { _d: { firstname: 'Wolfram' } } )
+      expect( value ).to.deep.equal( { _d: { firstname: 'Wolfram' } } )
       done()
     })
   })
@@ -66,7 +66,7 @@ describe( 'the message connector has the correct structure', () => {
   it( 'retrieves the updated value', ( done ) => {
     cacheConnector.get( 'someValue', ( error, value ) => {
       expect( error ).to.equal( null )
-      expect( value ).to.equal( { _d: { firstname: 'Egon' } } )
+      expect( value ).to.deep.equal( { _d: { firstname: 'Egon' } } )
       done()
     })
   })
