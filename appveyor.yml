@@ -1,0 +1,51 @@
+environment:
+  RETHINKDB_HOST: 54.93.77.53
+
+os:
+  - Visual Studio 2015
+
+platform:
+  - x64
+
+install:
+  - ps: Install-Product node 4.4.5
+  - npm install
+
+test_script:
+  - node --version
+  - npm --version
+  - npm test
+  - bash scripts\package.sh
+  - For /d %%d in ( build\** ) do MOVE %%d %cd%
+  - For %%d in ( build\** ) do MOVE %%d %cd%
+
+artifacts:
+  - path: 'build\*.zip'
+    name: 'deepstream.io-connector'
+
+  - path: '**\*.zip'
+  - path: '*.zip'
+
+deploy:
+
+  - provider: S3
+    access_key_id:
+      secure: cq7lgQP04314hwXwM2l0yiUKRcOkwHeKkDHFULrThxE=
+    secret_access_key:
+      secure: AMUWZVZ4o7lS6f5ogqxTTCqDUR/TYEmPaVXzb7yRRyFUTF/zQFnZHYk1G/j7ie8/
+    bucket: ds-server-artifacts
+    folder: $(APPVEYOR_REPO_NAME)
+    on:
+      appveyor_repo_tag: false
+
+  - provider: GitHub
+    release: $(APPVEYOR_REPO_TAG_NAME)
+    description: 'Release description'
+    auth_token:
+      secure: tZHuiZVCwkXRYMihVyoNrmDxAm6xPbXyop7Plg5uUWIIqA1EoUCrTYd/V+0D1I+Y
+    artifact: 'deepstream.io-connector'
+    draft: true
+    on:
+      appveyor_repo_tag: true
+
+build: off

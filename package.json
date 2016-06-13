@@ -13,7 +13,7 @@
     "url": "https://github.com/deepstreamIO/deepstream.io-storage-rethinkdb.git"
   },
   "author": "deepstreamHub GmbH",
-  "license": "MIT",
+  "license": "Apache License, Version 2.0",
   "bugs": {
     "url": "https://github.com/deepstreamIO/deepstream.io-storage-rethinkdb/issues"
   },
