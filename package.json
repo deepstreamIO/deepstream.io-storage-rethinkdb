@@ -5,15 +5,16 @@
   "main": "src/connector.js",
   "scripts": {
     "test": "mocha",
-    "coverage": "istanbul cover _mocha",
-    "lint": "eslint \"src/**/*.js\" \"test/**/*.js\""
+    "coverage": "istanbul cover node_modules/mocha/bin/_mocha",
+    "lint": "eslint \"src/**/*.js\" \"test/**/*.js\"",
+    "ci": "npm run coverage && npm run lint"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/deepstreamIO/deepstream.io-storage-rethinkdb.git"
   },
   "author": "deepstreamHub GmbH",
-  "license": "Apache License, Version 2.0",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/deepstreamIO/deepstream.io-storage-rethinkdb/issues"
   },
@@ -25,8 +26,6 @@
     "chai": "^3.5.0",
     "coveralls": "^2.11.9",
     "eslint": "^2.10.2",
-    "grunt": "~0.4.5",
-    "grunt-release": "0.9.0",
     "istanbul": "^0.4.3",
     "mocha": "^2.5.2"
   }
