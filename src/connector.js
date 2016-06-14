@@ -5,7 +5,7 @@ const util = require( 'util' )
 const rethinkdb = require( 'rethinkdb' )
 const Connection = require( './connection' )
 const TableManager = require( './table-manager' )
-const DataTransform = require( './transform-data' )
+const dataTransform = require( './transform-data' )
 const pckg = require( '../package.json' )
 const PRIMARY_KEY = require( './primary-key')
 
@@ -71,7 +71,7 @@ class Connector extends EventEmitter {
    */
   set( key, value, callback ) {
     const params = this._getParams( key )
-    const entry  = DataTransform.transformValueForStorage( value )
+    const entry  = dataTransform.transformValueForStorage( value )
     const insert = this._insert.bind( this, params, entry, callback )
 
     if( this._tableManager.hasTable( params.table ) ) {
@@ -98,7 +98,7 @@ class Connector extends EventEmitter {
       rethinkdb.table( params.table ).get( params.id ).run( this._connection.get(), ( error, entry ) => {
         if( entry ) {
           delete entry[ this._primaryKey ]
-          entry = DataTransform.transformValueFromStorage( entry )
+          entry = dataTransform.transformValueFromStorage( entry )
         }
         callback( error, entry )
       } )
