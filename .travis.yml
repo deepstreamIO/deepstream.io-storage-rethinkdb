@@ -1,9 +1,17 @@
-language: node_js
-
 env:
   global:
     - CXX=g++-4.8
     - RETHINKDB_HOST=54.93.77.53
+
+# Do not insert any code under here without making sures it's in publishingtest first
+language: node_js
+
+plugins:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-4.8
 
 node_js:
   - "stable"
@@ -15,13 +23,10 @@ matrix:
       os: osx
 
 script:
-  - npm test
-
-after_script:
-  - "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
-
-before_deploy:
-  - chmod 555 scripts/package.sh && scripts/package.sh
+  - npm run test
+  - curl -o package.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io-connector-publishingtest/master/scripts/package.sh
+  - chmod 555 package.sh
+  - ./package.sh
 
 deploy:
   - provider: s3
@@ -45,9 +50,10 @@ deploy:
     on:
       tags: true
 
-plugins:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - g++-4.8
+after_deploy:
+  - curl -o test.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io-connector-publishingtest/master/scripts/test.sh
+  - chmod 555 test.sh
+  - ./test.sh
+
+after_script:
+  - "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"

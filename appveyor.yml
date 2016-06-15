@@ -1,6 +1,7 @@
 environment:
   RETHINKDB_HOST: 54.93.77.53
 
+# Do not insert any code under here without making sures it's in publishingtest first
 os:
   - Visual Studio 2015
 
@@ -15,19 +16,17 @@ test_script:
   - node --version
   - npm --version
   - npm test
-  - bash scripts\package.sh
+  - curl -o package.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io-connector-publishingtest/master/scripts/package.sh
+  - bash package.sh
   - For /d %%d in ( build\** ) do MOVE %%d %cd%
-  - For %%d in ( build\** ) do MOVE %%d %cd%
 
 artifacts:
   - path: 'build\*.zip'
     name: 'deepstream.io-connector'
 
   - path: '**\*.zip'
-  - path: '*.zip'
 
 deploy:
-
   - provider: S3
     access_key_id:
       secure: cq7lgQP04314hwXwM2l0yiUKRcOkwHeKkDHFULrThxE=
@@ -44,8 +43,13 @@ deploy:
     auth_token:
       secure: tZHuiZVCwkXRYMihVyoNrmDxAm6xPbXyop7Plg5uUWIIqA1EoUCrTYd/V+0D1I+Y
     artifact: 'deepstream.io-connector'
-    draft: true
+    draft: false
     on:
       appveyor_repo_tag: true
+
+after_deploy:
+  - curl -o test.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io-connector-publishingtest/master/scripts/test.sh
+  - chmod 555 test.sh
+  - bash test.sh
 
 build: off
