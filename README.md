@@ -10,6 +10,19 @@
 This connector uses [the npm rethinkdb package](https://www.npmjs.com/package/rethinkdb). Please have a look there for detailed options.
 
 ##Configuration Options
+```yaml
+plugins:
+  storage:
+    name: rethinkdb
+    options:
+      host: ${RETHINKDB_HOST}
+      port: ${RETHINKDB_PORT}
+      database: 'someDb'
+      defaultTable: 'someTable'
+      splitChar: '/'
+```
+
+
 ```javascript
 {
 	//The host that RethinkDb is listening on

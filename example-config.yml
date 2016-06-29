@@ -1,0 +1,9 @@
+plugins:
+  storage:
+    name: rethinkdb
+    options:
+      host: ${RETHINKDB_HOST}
+      port: 28015
+      database: 'someDb'
+      defaultTable: 'someTable'
+      splitChar: '/'
