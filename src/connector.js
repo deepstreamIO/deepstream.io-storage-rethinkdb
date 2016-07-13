@@ -71,7 +71,7 @@ class Connector extends EventEmitter {
    */
   set( key, value, callback ) {
     const params = this._getParams( key )
-    const entry  = dataTransform.transformValueForStorage( value )
+    const entry  = dataTransform.transformValueForStorage( JSON.parse( JSON.stringify( value ) ) )
     const insert = this._insert.bind( this, params, entry, callback )
 
     if( this._tableManager.hasTable( params.table ) ) {
