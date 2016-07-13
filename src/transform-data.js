@@ -11,6 +11,7 @@
  * @returns {Object} data
  */
 module.exports.transformValueForStorage = function ( value ) {
+  value = JSON.parse( JSON.stringify( value ) )
   var data = value._d
   delete value._d
   data.__ds = value
