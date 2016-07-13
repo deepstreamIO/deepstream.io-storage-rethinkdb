@@ -1,7 +1,7 @@
 env:
   global:
     - CXX=g++-4.8
-    - RETHINKDB_HOST=54.93.77.53
+    - RETHINKDB_HOST=54.93.147.100
 
 # Do not insert any code under here without making sures it's in publishingtest first
 language: node_js
