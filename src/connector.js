@@ -197,7 +197,7 @@ class Connector extends EventEmitter {
     if( typeof options.host !== 'string' ) {
       throw new Error( 'Missing option host' )
     }
-    if( typeof options.port !== 'number' ) {
+    if( isNaN( options.port ) ) {
       throw new Error( 'Missing option port' )
     }
   }
