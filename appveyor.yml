@@ -1,7 +1,3 @@
-environment:
-  RETHINKDB_HOST: 54.93.147.100
-
-# Do not insert any code under here without making sures it's in publishingtest first
 os:
   - Visual Studio 2015
 
@@ -11,6 +7,12 @@ platform:
 install:
   - ps: Install-Product node 4.4.5
   - npm install
+  - curl -L https://download.rethinkdb.com/windows/rethinkdb-2.3.5.zip -O rethinkdb.zip
+  - unzip rethinkdb-2.3.5.zip -d rethinkdb
+  - ps: $MyProcess = Start-Process rethinkdb/rethinkdb.exe -PassThru
+
+on_finish:
+  - ps: Stop-Process -Id $MyProcess.Id
 
 test_script:
   - node --version
@@ -19,6 +21,9 @@ test_script:
   - curl -o package.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io-connector-publishingtest/master/scripts/package.sh
   - bash package.sh
   - For /d %%d in ( build\** ) do MOVE %%d %cd%
+
+
+# Do not insert any code under here without making sures it's in publishingtest first
 
 artifacts:
   - path: 'build\*.zip'
