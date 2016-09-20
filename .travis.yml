@@ -1,7 +1,15 @@
 env:
   global:
     - CXX=g++-4.8
-    - RETHINKDB_HOST=54.93.147.100
+
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then brew update   ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then brew install rethinkdb  ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then rethinkdb --daemon ; fi
+
+
+addons:
+  rethinkdb: '2.3'
 
 # Do not insert any code under here without making sures it's in publishingtest first
 language: node_js
