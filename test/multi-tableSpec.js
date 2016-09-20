@@ -34,7 +34,7 @@ describe(  'it  distributes  records  between  multiple  tables',  () => {
   })
 
   it(  'deletes  dsTestB',  (  done  ) => {
-    rethinkdb.tableDrop(  'dsTestB'  ).run(conn, done )
+    rethinkdb.tableDrop(  'dsTestB'  ).run(conn, () => { done() } )
   })
 
   it(  'deletes  dsTestB',  (  done  ) => {
