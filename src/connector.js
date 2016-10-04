@@ -8,6 +8,7 @@ const TableManager = require( './table-manager' )
 const dataTransform = require( './transform-data' )
 const pckg = require( '../package.json' )
 const PRIMARY_KEY = require( './primary-key')
+const crypto = require( 'crypto' )
 
 class Connector extends EventEmitter {
 
@@ -157,12 +158,15 @@ class Connector extends EventEmitter {
    */
   _getParams( key ) {
     const parts = key.split( this._splitChar )
+    const params = parts.length === 2
+      ? { table: parts[ 0 ], id: parts[ 1 ] }
+      : { table: this._defaultTable, id: key }
 
-    if( parts.length === 2 ) {
-      return { table: parts[ 0 ], id: parts[ 1 ] }
-    } else {
-      return { table: this._defaultTable, id: key }
+    if (params.id.length > 127) {
+      params.id = crypto.createHash('sha1').update(params.id).digest("hex")
     }
+
+    return params
   }
 
   /**
