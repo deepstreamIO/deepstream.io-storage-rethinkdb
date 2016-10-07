@@ -55,6 +55,9 @@ class Connector extends EventEmitter {
     this._tableManager = new TableManager( this._connection )
     this._defaultTable = options.defaultTable || 'deepstream_records'
     this._splitChar = options.splitChar || null
+    this._tableMatch = this._splitChar
+      ? new RegExp( '^(\\w+)' + this._escapeRegExp( this._splitChar ) )
+      : null
     this._primaryKey = options.primaryKey || PRIMARY_KEY
   }
 
@@ -99,6 +102,7 @@ class Connector extends EventEmitter {
       rethinkdb.table( params.table ).get( params.id ).run( this._connection.get(), ( error, entry ) => {
         if( entry ) {
           delete entry[ this._primaryKey ]
+          delete entry.__key // in case is set
           entry = dataTransform.transformValueFromStorage( entry )
         }
         callback( error, entry )
@@ -157,13 +161,18 @@ class Connector extends EventEmitter {
    * @returns {Object} params
    */
   _getParams( key ) {
-    const parts = key.split( this._splitChar )
-    const params = parts.length === 2
-      ? { table: parts[ 0 ], id: parts[ 1 ] }
-      : { table: this._defaultTable, id: key }
+    const table = key.match( this._tableMatch )
+    var params = { table: this._defaultTable, id: key }
 
-    if (params.id.length > 127) {
-      params.id = crypto.createHash('sha1').update(params.id).digest("hex")
+    if( table ) {
+      params.table = table[1]
+      params.id = key.substr(table[1].length + 1)
+    }
+
+    // rethink can't have a key > 127 bytes; hash key and store alongside
+    if( params.id.length > 127 ) {
+      params.fullKey = params.id;
+      params.id = crypto.createHash( 'sha256' ).update( params.id ).digest( 'hex' );
     }
 
     return params
@@ -181,6 +190,9 @@ class Connector extends EventEmitter {
    */
   _insert( params, value, callback ) {
     value[ this._primaryKey ] = params.id
+    if( params.fullKey ) {
+      value.__key = params.fullKey
+    }
 
     rethinkdb
       .table( params.table )
@@ -205,5 +217,20 @@ class Connector extends EventEmitter {
       throw new Error( 'Missing option port' )
     }
   }
- }
+
+  /**
+   * Escapes user input for use in a regular expression
+   *
+   * @param   {String} string the user input
+   *
+   * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+   * @copyright public domain
+   *
+   * @private
+   * @returns {String} escaped user input
+   */
+  _escapeRegExp( string ) {
+    return string.replace( /[.*+?^${}()|[\]\\]/g, '\\$&' ) // $& means the whole matched string
+  }
+}
 module.exports = Connector
