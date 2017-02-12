@@ -23,11 +23,11 @@ plugins:
 
 node_js:
   - "stable"
-  - "4.4.5"
+  - "6.9.5"
 
 matrix:
   include:
-    - node_js: "4.4.5"
+    - node_js: "6.9.5"
       os: osx
 
 script:

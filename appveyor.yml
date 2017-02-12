@@ -5,10 +5,10 @@ platform:
   - x64
 
 install:
-  - ps: Install-Product node 4.4.5
+  - ps: Install-Product node 6.9.5
   - npm install
-  - curl -L https://download.rethinkdb.com/windows/rethinkdb-2.3.5.zip -O rethinkdb.zip
-  - unzip rethinkdb-2.3.5.zip -d rethinkdb
+  - curl -L https://download.rethinkdb.com/windows/rethinkdb-2.3.5.zip > rethinkdb.zip
+  - unzip rethinkdb.zip -d rethinkdb
   - ps: $MyProcess = Start-Process rethinkdb/rethinkdb.exe -PassThru
 
 on_finish:
