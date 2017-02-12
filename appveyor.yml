@@ -34,9 +34,9 @@ artifacts:
 deploy:
   - provider: S3
     access_key_id:
-      secure: cq7lgQP04314hwXwM2l0yiUKRcOkwHeKkDHFULrThxE=
+      secure: zIKwOEzh56IXWlpXWMDwjC9Dqz58ZifBBQUZ43wDQWs=
     secret_access_key:
-      secure: AMUWZVZ4o7lS6f5ogqxTTCqDUR/TYEmPaVXzb7yRRyFUTF/zQFnZHYk1G/j7ie8/
+      secure: br3dL6aFlkMBeqdXSeXfKeZmjyZl1OGD9STaUiGXsWic50DEqedx24C0LipYJqYI
     bucket: ds-server-artifacts
     folder: $(APPVEYOR_REPO_NAME)
     on:
