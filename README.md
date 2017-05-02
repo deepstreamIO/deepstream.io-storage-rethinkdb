@@ -1,4 +1,6 @@
 # deepstream.io-storage-rethinkdb
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/deepstreamIO/deepstream.io-storage-rethinkdb.svg)](https://greenkeeper.io/)
 [![Coverage Status](https://coveralls.io/repos/github/deepstreamIO/deepstream.io-storage-rethinkdb/badge.svg?branch=master)](https://coveralls.io/github/deepstreamIO/deepstream.io-storage-rethinkdb?branch=master)
 [![npm](https://img.shields.io/npm/v/deepstream.io-storage-rethinkdb.svg)](https://www.npmjs.com/package/deepstream.io-storage-rethinkdb)
 [![Dependency Status](https://david-dm.org/deepstreamIO/deepstream.io-storage-rethinkdb.svg)](https://david-dm.org/deepstreamIO/deepstream.io-storage-rethinkdb)
