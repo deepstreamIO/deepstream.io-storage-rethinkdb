@@ -5,11 +5,13 @@
 [![devDependency Status](https://david-dm.org/deepstreamIO/deepstream.io-storage-rethinkdb/dev-status.svg)](https://david-dm.org/deepstreamIO/deepstream.io-storage-rethinkdb#info=devDependencies)
 [![devDependency Status](https://david-dm.org/deepstreamIO/deepstream.io-storage-rethinkdb/dev-status.svg)](https://david-dm.org/deepstreamIO/deepstream.io-storage-rethinkdb#info=devDependencies)
 
-[deepstream](http://deepstream.io) storage connector for [rethinkdb](http://rethinkdb.com/)
+[Deepstream](http://deepstream.io) storage connector for [RethinkDB](http://rethinkdb.com/)
 
 This connector uses [the npm rethinkdb package](https://www.npmjs.com/package/rethinkdb). Please have a look there for detailed options.
 
-##Configuration Options
+**Warning**: This plugin will automatically create a table, if it doesn't exist yet. But be aware, in case you create a table manually, use "ds_id" as the primary key. Otherwise the plugin won't be able to find your records. 
+
+## Configuration Options
 ```yaml
 plugins:
   storage:
@@ -21,7 +23,6 @@ plugins:
       defaultTable: 'someTable'
       splitChar: '/'
 ```
-
 
 ```javascript
 {
@@ -52,7 +53,7 @@ plugins:
 }
 ```
 
-##Basic Setup
+## Basic Setup
 ```javascript
 var Deepstream = require( 'deepstream.io' ),
     RethinkDBStorageConnector = require( 'deepstream.io-storage-rethinkdb' ),
