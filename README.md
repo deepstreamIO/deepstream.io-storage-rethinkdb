@@ -30,36 +30,36 @@ plugins:
 
 ```javascript
 {
-	//The host that RethinkDb is listening on
-	host: 'localhost',
+  //The host that RethinkDb is listening on
+  host: 'localhost',
 
-	//The port that RethinkDb is listening on
-	port: 28015,
+  //The port that RethinkDb is listening on
+  port: 28015,
 
-	//(Optional) Authentication key for RethinkDb
-	authKey: 'someString',
+  //(Optional) Authentication key for RethinkDb
+  authKey: 'someString',
 
-	//(Optional, defaults to 'deepstream')
-	database: 'someDb',
+  //(Optional, defaults to 'deepstream')
+  database: 'someDb',
 
-	//(Optional, defaults to 'deepstream_records')
-	defaultTable: 'someTable',
+  //(Optional, defaults to 'deepstream_records')
+  defaultTable: 'someTable',
 
-	/* (Optional) A character that's used as part of the
-	* record names to split it into a tabel and an id part, e.g.
-	*
-	* books/dream-of-the-red-chamber
-	*
-	* would create a table called 'books' and store the record under the name
-	* 'dream-of-the-red-chamber'
-	*/
+  /* (Optional) A character that's used as part of the
+  * record names to split it into a tabel and an id part, e.g.
+  *
+  * books/dream-of-the-red-chamber
+  *
+  * would create a table called 'books' and store the record under the name
+  * 'dream-of-the-red-chamber'
+  */
   splitChar: '/',
 
   // (Optional, defaults to 0) If the rhe rethinkdb connection is lost, try to reconnect max. this number of times
   reconnectCount: 2,
 
   // (Optional, defaults to 2000) Timeout between reconnect attempts in milliseconds
-	reconnectTimeout: 3000
+  reconnectTimeout: 3000
 }
 ```
 
