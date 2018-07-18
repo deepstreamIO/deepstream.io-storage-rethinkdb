@@ -22,7 +22,6 @@ class Connection {
         this._database = options.database || 'deepstream'
         options.db = this._database
         rethinkdb.connect(options, this._fn(this._onConnection))
-        console.log("CONNECTION ESTABLISED")
     }
 
     /**
