@@ -52,7 +52,7 @@ class Connection {
      * @returns {Number} the timeout in ms
      */
     get reconnectTimeout() {
-        return this._options.reconnectTimeout >= 0 ? this._options.reconnectTimeout : 2000;
+        return this._options.reconnectTimeout >= 1000 ? this._options.reconnectTimeout : 2000;
     }
 
     /**

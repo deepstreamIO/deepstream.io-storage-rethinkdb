@@ -11,7 +11,7 @@ describe('It can recover from a lost connection', () => {
 
     it('creates the cacheConnector', (done) => {
         const cp = Object.assign({}, connectionParams);
-        cp.reconnectCount = 10000
+        cp.reconnectCount = 3
         cp.reconnectTimeout = 1000
         cacheConnector = new CacheConnector(cp)
         expect(cacheConnector.isReady).to.equal(false)

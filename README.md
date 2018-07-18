@@ -58,7 +58,7 @@ plugins:
   // (Optional, defaults to 0) If the rhe rethinkdb connection is lost, try to reconnect max. this number of times
   reconnectCount: 2,
 
-  // (Optional, defaults to 2000) Timeout between reconnect attempts in milliseconds
+  // (Optional, defaults to 2000) Timeout between reconnect attempts in milliseconds. It cannot be less than 1000, if you specify less than 1000, then it will be set to 1000!
   reconnectTimeout: 3000
 }
 ```

@@ -257,15 +257,14 @@ class Connector extends EventEmitter {
             }
 
             if (error && (error.msg === 'Connection is closed.' || error.msg.match(/Could not connect to/)) && !!this._reconnectCount) {
-                console.log("Lost rethinkdb connection, will reconnect...", error)
-                setTimeout(() => {
-                    return this._connection.reconnect()
-                        .then(() => {
-                            this._reconnectCount--
-                                fv.apply(this, args)
-                        })
-                        .catch(err => fv.apply(this, args))
-                }, this._connection.reconnectTimeout)
+                console.log("Lost rethinkdb connection, will reconnect ", this._reconnectCount, " times")
+                this._reconnectCount--
+
+                    setTimeout(() => {
+                        return this._connection.reconnect()
+                            .then(() => fv.apply(this, args))
+                            .catch(err => fv.apply(this, args))
+                    }, this._connection.reconnectTimeout)
             } else {
                 callback(error, entry);
             }
