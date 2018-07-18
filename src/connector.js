@@ -257,6 +257,7 @@ class Connector extends EventEmitter {
             }
 
             if (error && (error.msg === 'Connection is closed.' || error.msg.match(/Could not connect to/)) && !!this._reconnectCount) {
+                console.log("Lost rethinkdb connection, will reconnect...", error)
                 setTimeout(() => {
                     return this._connection.reconnect()
                         .then(() => {
