@@ -8,10 +8,11 @@ const connectionParams = require('./connection-params')
 
 describe('It can recover from a lost connection', () => {
     var cacheConnector
+
     it('creates the cacheConnector', (done) => {
         const cp = Object.assign({}, connectionParams);
-        cp.reconnectCount = 1
-        cp.reconnectTimeout = 100
+        cp.reconnectCount = 10000
+        cp.reconnectTimeout = 1000
         cacheConnector = new CacheConnector(cp)
         expect(cacheConnector.isReady).to.equal(false)
         cacheConnector.on('ready', done)

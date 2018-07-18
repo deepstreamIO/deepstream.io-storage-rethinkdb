@@ -256,14 +256,14 @@ class Connector extends EventEmitter {
                 this._reconnectCount = this._connection.reconnectCount
             }
 
-            if (error && error.msg === 'Connection is closed.' && !!this._reconnectCount) {
+            if (error && (error.msg === 'Connection is closed.' || error.msg.match(/Could not connect to/)) && !!this._reconnectCount) {
                 setTimeout(() => {
                     return this._connection.reconnect()
                         .then(() => {
                             this._reconnectCount--
                                 fv.apply(this, args)
                         })
-                        .catch(err => callback(error, entry))
+                        .catch(err => fv.apply(this, args))
                 }, this._connection.reconnectTimeout)
             } else {
                 callback(error, entry);
