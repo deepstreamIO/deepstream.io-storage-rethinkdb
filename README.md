@@ -1,4 +1,5 @@
 # deepstream.io-storage-rethinkdb
+
 [![Coverage Status](https://coveralls.io/repos/github/deepstreamIO/deepstream.io-storage-rethinkdb/badge.svg?branch=master)](https://coveralls.io/github/deepstreamIO/deepstream.io-storage-rethinkdb?branch=master)
 [![npm](https://img.shields.io/npm/v/deepstream.io-storage-rethinkdb.svg)](https://www.npmjs.com/package/deepstream.io-storage-rethinkdb)
 [![Dependency Status](https://david-dm.org/deepstreamIO/deepstream.io-storage-rethinkdb.svg)](https://david-dm.org/deepstreamIO/deepstream.io-storage-rethinkdb)
@@ -9,9 +10,10 @@
 
 This connector uses [the npm rethinkdb package](https://www.npmjs.com/package/rethinkdb). Please have a look there for detailed options.
 
-**Warning**: This plugin will automatically create a table, if it doesn't exist yet. But be aware, in case you create a table manually, use "ds_id" as the primary key. Otherwise the plugin won't be able to find your records. 
+**Warning**: This plugin will automatically create a table, if it doesn't exist yet. But be aware, in case you create a table manually, use "ds_id" as the primary key. Otherwise the plugin won't be able to find your records.
 
 ## Configuration Options
+
 ```yaml
 plugins:
   storage:
@@ -22,6 +24,8 @@ plugins:
       database: 'someDb'
       defaultTable: 'someTable'
       splitChar: '/'
+      reconnectTimeout: 2000
+      reconnectCount: 0
 ```
 
 ```javascript
@@ -49,21 +53,30 @@ plugins:
 	* would create a table called 'books' and store the record under the name
 	* 'dream-of-the-red-chamber'
 	*/
-	splitChar: '/'
+  splitChar: '/',
+
+  // (Optional, defaults to 0) If the rhe rethinkdb connection is lost, try to reconnect max. this number of times
+  reconnectCount: 2,
+
+  // (Optional, defaults to 2000) Timeout between reconnect attempts in milliseconds
+	reconnectTimeout: 3000
 }
 ```
 
 ## Basic Setup
-```javascript
-var Deepstream = require( 'deepstream.io' ),
-    RethinkDBStorageConnector = require( 'deepstream.io-storage-rethinkdb' ),
-    server = new Deepstream();
 
-server.set( 'storage', new RethinkDBStorageConnector( {
-  port: 5672,
-  host: 'localhost'
-}));
+```javascript
+var Deepstream = require('deepstream.io'),
+  RethinkDBStorageConnector = require('deepstream.io-storage-rethinkdb'),
+  server = new Deepstream();
+
+server.set(
+  'storage',
+  new RethinkDBStorageConnector({
+    port: 5672,
+    host: 'localhost'
+  })
+);
 
 server.start();
 ```
-
