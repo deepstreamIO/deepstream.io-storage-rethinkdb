@@ -34,7 +34,7 @@ describe('the message connector has the correct structure', () => {
     })
 
     it('retrieves a non existing value', (done) => {
-        cacheConnector.get('someValue', (error, value) => {
+        cacheConnector.get('someNonexistingValue', (error, value) => {
             expect(error).to.equal(null)
             expect(value).to.equal(null)
             done()

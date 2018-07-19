@@ -63,8 +63,13 @@ class Connection {
      * @returns {RethinkDB Connection} connection as promise
      */
     reconnect() {
-        if (this.reconnectCount)
+        if (this.reconnectCount) {
+            console.log("Lost rethinkdb connection, reconnecting...")
             return rethinkdb.connect(this._options).then(conn => this._connection = conn)
+        } else {
+            console.log("Lost rethinkdb connection, no reconnection allowed...")
+            return Promise.resolve()
+        }
     }
 
     /**

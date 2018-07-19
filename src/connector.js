@@ -3,6 +3,20 @@
 const crypto = require('crypto')
 const EventEmitter = require('events').EventEmitter
 const rethinkdb = require('rethinkdb')
+const {
+    from,
+    of,
+    pipe,
+} = require('rxjs')
+
+const {
+    switchMap,
+    retryWhen,
+    share,
+    delay,
+    take,
+} = require('rxjs/operators')
+
 const Connection = require('./connection')
 const TableManager = require('./table-manager')
 const dataTransform = require('./transform-data')
@@ -51,7 +65,6 @@ class Connector extends EventEmitter {
         this._checkOptions(options)
         this._options = options
         this._connection = new Connection(options, this._onConnection.bind(this))
-        this._reconnectCount = this._connection.reconnectCount
         this._tableManager = new TableManager(this._connection)
         this._defaultTable = options.defaultTable || 'deepstream_records'
         this._splitChar = options.splitChar || null
@@ -59,6 +72,16 @@ class Connector extends EventEmitter {
             new RegExp('^(\\w+)' + this._escapeRegExp(this._splitChar)) :
             null
         this._primaryKey = options.primaryKey || PRIMARY_KEY
+
+        // The reconnection logic. Failing operations must subscribe to it to trigger reconnection.
+        this._reconnect$ = of(true).pipe(
+            delay(this._connection.reconnectTimeout),
+            switchMap(() => from(this._connection.reconnect()).pipe(
+                retryWhen(errors => errors.pipe(
+                    delay(this._connection.reconnectTimeout),
+                    take(this._connection.reconnectCount)
+                )))),
+            share())
     }
 
     /**
@@ -126,7 +149,7 @@ class Connector extends EventEmitter {
         const params = this._getParams(key)
 
         if (this._tableManager.hasTable(params.table)) {
-            rethinkdb.table(params.table).get(params.id).delete().run(this._connection.connection, callback);
+            rethinkdb.table(params.table).get(params.id).delete().run(this._connection.connection, (error, entry) => this._errorHandler(callback, this.delete, arguments)(error, entry));
         } else {
             callback(new Error('Table \'' + params.table + '\' does not exist'));
         }
@@ -251,23 +274,11 @@ class Connector extends EventEmitter {
      */
     _errorHandler(callback, fv, args) {
         return (error, entry) => {
-            // If there is NO error, then we can safely reset the reconnect count to the original value
-            if (!error) {
-                this._reconnectCount = this._connection.reconnectCount
+            if (error && (error.msg === 'Connection is closed.' || error.msg.match(/Could not connect to/))) {
+                this._reconnect$.subscribe()
             }
 
-            if (error && (error.msg === 'Connection is closed.' || error.msg.match(/Could not connect to/)) && !!this._reconnectCount) {
-                console.log("Lost rethinkdb connection, will reconnect ", this._reconnectCount, " times")
-                this._reconnectCount--
-
-                    setTimeout(() => {
-                        return this._connection.reconnect()
-                            .then(() => fv.apply(this, args))
-                            .catch(err => fv.apply(this, args))
-                    }, this._connection.reconnectTimeout)
-            } else {
-                callback(error, entry);
-            }
+            callback(error, entry);
         }
     }
 }
