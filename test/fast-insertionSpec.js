@@ -53,7 +53,7 @@ describe( 'Is able to insert a larger number of values in quick succession', () 
   })
 
   it( 'deletes dsTestA', ( done ) => {
-    const conn = storageConnector._connection.get()
+    const conn = storageConnector._connection.connection
     rethinkdb.tableDrop( 'quickInsertTestTable' ).run(conn, () => { done() } )
   })
 })

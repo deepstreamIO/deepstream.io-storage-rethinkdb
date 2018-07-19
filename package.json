@@ -19,7 +19,8 @@
   },
   "homepage": "http://deepstream.io",
   "dependencies": {
-    "rethinkdb": "2.3.3"
+    "rethinkdb": "2.3.3",
+    "rxjs": "^6.2.2"
   },
   "devDependencies": {
     "chai": "^3.5.0",
