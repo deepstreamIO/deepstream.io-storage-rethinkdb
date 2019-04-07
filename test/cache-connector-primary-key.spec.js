@@ -1,14 +1,9 @@
-/* global describe, expect, it, jasmine */
-'use strict'
-
 const expect = require('chai').expect
 const CacheConnector = require( '../src/connector' )
-const  EventEmitter = require( 'events' ).EventEmitter
-const  rethinkdb = require( 'rethinkdb' )
-const  connectionParams = require( './connection-params' )
-const  MESSAGE_TIME = 20
+const EventEmitter = require( 'events' ).EventEmitter
+const connectionParams = require( './connection-params' )
 
-describe( 'the message connector has the correct structure', () => {
+describe( 'the message connector has the correct structure', () =>  {
   var cacheConnector
 
   it( 'throws an error if required connection parameters are missing', () => {
@@ -16,7 +11,12 @@ describe( 'the message connector has the correct structure', () => {
   })
 
   it( 'creates the cacheConnector', ( done ) => {
-    cacheConnector = new CacheConnector( connectionParams )
+    cacheConnector = new CacheConnector( {
+      host: connectionParams.host,
+      port: connectionParams.port,
+      database: connectionParams.database + 2,
+      primaryKey: 'own-primary-key'
+    } )
     expect( cacheConnector.isReady ).to.equal( false )
     cacheConnector.on( 'ready', done )
     cacheConnector.on( 'error', ( error ) => {
@@ -66,7 +66,7 @@ describe( 'the message connector has the correct structure', () => {
   it( 'retrieves the updated value', ( done ) => {
     cacheConnector.get( 'someValue', ( error, value ) => {
       expect( error ).to.equal( null )
-      expect( value ).to.deep.equal( { _d: { firstname: 'Egon' } } )
+      expect( value ).to.deep.equal( { _d : { firstname: 'Egon' } } )
       done()
     })
   })

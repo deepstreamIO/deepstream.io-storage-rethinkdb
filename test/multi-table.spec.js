@@ -1,6 +1,3 @@
-/*  global  describe,  expect,  it,  jasmine  */
-'use  strict'
-
 const  expect  =  require('chai').expect
 const  CacheConnector  =  require(  '../src/connector'  )
 const  rethinkdb  =  require(  'rethinkdb'  )

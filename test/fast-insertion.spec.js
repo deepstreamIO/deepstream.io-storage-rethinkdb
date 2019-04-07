@@ -1,6 +1,3 @@
-/*  global  describe,  expect,  it,  jasmine  */
-'use strict'
-
 const expect = require('chai').expect
 const StorageConnector = require( '../src/connector' )
 const connectionParams = require( './connection-params' )
@@ -12,7 +9,6 @@ const settings = {
   defaultTable: 'dsTestDefault',
   database: 'deepstream_storage_provider_test'
 }
-const MESSAGE_TIME = 50
 var storageConnector
 
 describe( 'Is able to insert a larger number of values in quick succession', () => {

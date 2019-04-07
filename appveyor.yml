@@ -1,11 +1,11 @@
 os:
-  - Visual Studio 2015
+  - Visual Studio 2017
 
 platform:
   - x64
 
 install:
-  - ps: Install-Product node 6.9.5
+  - ps: Install-Product node 10
   - npm install
   - curl -L https://download.rethinkdb.com/windows/rethinkdb-2.3.5.zip > rethinkdb.zip
   - unzip rethinkdb.zip -d rethinkdb
@@ -18,7 +18,7 @@ test_script:
   - node --version
   - npm --version
   - npm test
-  - curl -o package.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io-connector-publishingtest/master/scripts/package.sh
+  - curl -o package.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io/connector-submodules/scripts/connector/package-connector.sh
   - bash package.sh
   - For /d %%d in ( build\** ) do MOVE %%d %cd%
 
@@ -32,28 +32,17 @@ artifacts:
   - path: '**\*.zip'
 
 deploy:
-  - provider: S3
-    access_key_id:
-      secure: zIKwOEzh56IXWlpXWMDwjC9Dqz58ZifBBQUZ43wDQWs=
-    secret_access_key:
-      secure: br3dL6aFlkMBeqdXSeXfKeZmjyZl1OGD9STaUiGXsWic50DEqedx24C0LipYJqYI
-    bucket: ds-server-artifacts
-    folder: $(APPVEYOR_REPO_NAME)
-    on:
-      appveyor_repo_tag: false
-
   - provider: GitHub
     release: $(APPVEYOR_REPO_TAG_NAME)
     description: 'Release description'
-    auth_token:
-      secure: tZHuiZVCwkXRYMihVyoNrmDxAm6xPbXyop7Plg5uUWIIqA1EoUCrTYd/V+0D1I+Y
+    auth_token: ${GITHUB_TOKEN}
     artifact: 'deepstream.io-connector'
     draft: false
     on:
       appveyor_repo_tag: true
 
 after_deploy:
-  - curl -o test.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io-connector-publishingtest/master/scripts/test.sh
+  - curl -o test.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io/connector-submodules/scripts/connector/test-connector.sh
   - chmod 555 test.sh
   - bash test.sh
 

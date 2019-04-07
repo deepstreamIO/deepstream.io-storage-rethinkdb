@@ -4,9 +4,10 @@
   "description": "Connects deepstream.io to rethinkdb",
   "main": "src/connector.js",
   "scripts": {
-    "test": "mocha",
-    "coverage": "istanbul cover node_modules/mocha/bin/_mocha",
-    "ci": "npm run coverage "
+    "test": "mocha --exit",
+    "coverage": "nyc mocha --exit",
+    "ci": "npm run coverage",
+    "docker": "docker run -p 28015:28015 rethinkdb"
   },
   "repository": {
     "type": "git",
@@ -22,9 +23,9 @@
     "rethinkdb": "2.3.3"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "coveralls": "^2.11.9",
-    "istanbul": "0.4.5",
-    "mocha": "^3.0.2"
+    "chai": "^4.2.0",
+    "coveralls": "^3.0.3",
+    "mocha": "^6.1.0",
+    "nyc": "^13.3.0"
   }
 }
