@@ -3,7 +3,7 @@
 [![npm](https://img.shields.io/npm/v/deepstream.io-storage-rethinkdb.svg)](https://www.npmjs.com/package/deepstream.io-storage-rethinkdb)
 [![Dependency Status](https://david-dm.org/deepstreamIO/deepstream.io-storage-rethinkdb.svg)](https://david-dm.org/deepstreamIO/deepstream.io-storage-rethinkdb)
 [![devDependency Status](https://david-dm.org/deepstreamIO/deepstream.io-storage-rethinkdb/dev-status.svg)](https://david-dm.org/deepstreamIO/deepstream.io-storage-rethinkdb#info=devDependencies)
-[![devDependency Status](https://david-dm.org/deepstreamIO/deepstream.io-storage-rethinkdb/dev-status.svg)](https://david-dm.org/deepstreamIO/deepstream.io-storage-rethinkdb#info=devDependencies)
+[![devDependency Status](https://david-dm.org/deepstreamIO/deepstream.io-storage-rethinkdb/dev-status.svg)](https://david-dm.org/deepstreamIO/deepstream.io-storage-rethinkdb#info=devDependencies) [![Greenkeeper badge](https://badges.greenkeeper.io/deepstreamIO/deepstream.io-storage-rethinkdb.svg)](https://greenkeeper.io/)
 
 [Deepstream](http://deepstream.io) storage connector for [RethinkDB](http://rethinkdb.com/)
 
