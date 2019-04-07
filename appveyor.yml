@@ -18,7 +18,7 @@ test_script:
   - node --version
   - npm --version
   - npm test
-  - curl -o package.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io/connector-submodules/scripts/connector/package-connector.sh
+  - curl -o package.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io/v4/scripts/connector/package-connector.sh
   - bash package.sh
   - For /d %%d in ( build\** ) do MOVE %%d %cd%
 
@@ -42,7 +42,7 @@ deploy:
       appveyor_repo_tag: true
 
 after_deploy:
-  - curl -o test.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io/connector-submodules/scripts/connector/test-connector.sh
+  - curl -o test.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io/v4/scripts/connector/test-connector.sh
   - chmod 555 test.sh
   - bash test.sh
 

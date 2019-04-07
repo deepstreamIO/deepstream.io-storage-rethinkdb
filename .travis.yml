@@ -33,7 +33,7 @@ matrix:
 
 script:
   - npm run test
-  - curl -o package.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io/connector-submodules/scripts/connector/package-connector.sh
+  - curl -o package.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io/v4/scripts/connector/package-connector.sh
   - chmod 555 package.sh
   - ./package.sh
 
@@ -49,7 +49,7 @@ deploy:
       tags: true
 
 after_deploy:
-  - curl -o test.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io/connector-submodules/scripts/connector/test-connector.sh
+  - curl -o test.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io/v4/scripts/connector/test-connector.sh
   - chmod 555 test.sh
   - ./test.sh
 
