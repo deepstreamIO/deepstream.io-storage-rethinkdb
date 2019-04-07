@@ -1,16 +1,16 @@
-"use strict"
+"use strict";
 
-var EventEmitter = require( 'events' ).EventEmitter,
-  rethinkdb = require( 'rethinkdb' )
+var EventEmitter = require( "events" ).EventEmitter,
+  rethinkdb = require( "rethinkdb" );
 
 class TableManager extends EventEmitter {
 
   constructor( connection ) {
-    super()
-    this._connection = connection
-    this._tables = []
-    this._eventEmitter = new EventEmitter()
-    this._eventEmitter.setMaxListeners( 0 )
+    super();
+    this._connection = connection;
+    this._tables = [];
+    this._eventEmitter = new EventEmitter();
+    this._eventEmitter.setMaxListeners( 0 );
   }
 
   /**
@@ -20,12 +20,12 @@ class TableManager extends EventEmitter {
    * @returns {void}
    */
   createTable( table, primary_key, callback ) {
-    this._eventEmitter.once( table, callback )
+    this._eventEmitter.once( table, callback );
 
-    if( this._eventEmitter.listeners( table ).length === 1 ) {
+    if ( this._eventEmitter.listeners( table ).length === 1 ) {
       rethinkdb
-        .tableCreate( table, { primaryKey: primary_key, durability: 'soft' } )
-        .run( this._connection.get(), this._onTableCreated.bind( this, table ) )
+        .tableCreate( table, { primaryKey: primary_key, durability: "soft" } )
+        .run( this._connection.get(), this._onTableCreated.bind( this, table ) );
     }
   }
 
@@ -39,7 +39,7 @@ class TableManager extends EventEmitter {
    * @returns {Boolean} hasTable
    */
   hasTable( table ) {
-    return this._tables.indexOf( table ) !== -1
+    return this._tables.indexOf( table ) !== -1;
   }
 
   /**
@@ -55,12 +55,12 @@ class TableManager extends EventEmitter {
       .run( this._connection.get() )
       .bind( this )
       .then( function( tables ) {
-        this._tables = tables
+        this._tables = tables;
 
-        if( callback ) {
-          callback()
+        if ( callback ) {
+          callback();
         }
-      })
+      });
   }
 
   /**
@@ -73,12 +73,12 @@ class TableManager extends EventEmitter {
    * @returns {void}
    */
   _onTableCreated( table, error ) {
-    this.refreshTables()
+    this.refreshTables();
 
-    if( error && this._isTableExistsError( error ) === false ) {
-      this._eventEmitter.emit( table, error )
+    if ( error && this._isTableExistsError( error ) === false ) {
+      this._eventEmitter.emit( table, error );
     } else {
-      this._eventEmitter.emit( table, null )
+      this._eventEmitter.emit( table, null );
     }
   }
 
@@ -91,8 +91,8 @@ class TableManager extends EventEmitter {
    * @returns {void}
    */
   _isTableExistsError( error ) {
-    return error.msg.indexOf( 'already exists' ) !== -1
+    return error.msg.indexOf( "already exists" ) !== -1;
   }
 }
 
-module.exports = TableManager
+module.exports = TableManager;

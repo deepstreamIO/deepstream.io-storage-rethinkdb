@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 /**
  * This method is for the storage connector, to allow queries to happen more naturally
@@ -13,23 +13,23 @@
  * @private
  * @returns {Object} data
  */
-module.exports.transformValueForStorage = function ( value ) {
-  value = JSON.parse( JSON.stringify( value ) )
+module.exports.transformValueForStorage = function( value ) {
+  value = JSON.parse( JSON.stringify( value ) );
 
-  var data = value._d
-  delete value._d
+  var data = value._d;
+  delete value._d;
 
-  if( data instanceof Array ) {
+  if ( data instanceof Array ) {
     data = {
       __dsList: data,
-      __ds: value
-    }
+      __ds: value,
+    };
   } else {
-    data.__ds = value
+    data.__ds = value;
   }
 
-  return data
-}
+  return data;
+};
 
 /**
  * This method is for the storage connector, to allow queries to happen more naturally
@@ -45,16 +45,16 @@ module.exports.transformValueForStorage = function ( value ) {
  * @returns {Object} data
  */
 module.exports.transformValueFromStorage = function( value ) {
-  value = JSON.parse( JSON.stringify( value ) )
+  value = JSON.parse( JSON.stringify( value ) );
 
-  var data = value.__ds
-  delete value.__ds
+  var data = value.__ds;
+  delete value.__ds;
 
-  if( value.__dsList instanceof Array ) {
-    data._d = value.__dsList
+  if ( value.__dsList instanceof Array ) {
+    data._d = value.__dsList;
   } else {
-    data._d = value
+    data._d = value;
   }
 
-  return data
-}
+  return data;
+};

@@ -1,1 +1,1 @@
-module.exports = 'ds_id'
+module.exports = "ds_id";

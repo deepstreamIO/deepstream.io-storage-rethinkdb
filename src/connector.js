@@ -1,14 +1,14 @@
-"use strict"
+"use strict";
 
-const EventEmitter = require( 'events' ).EventEmitter
-const util = require( 'util' )
-const rethinkdb = require( 'rethinkdb' )
-const Connection = require( './connection' )
-const TableManager = require( './table-manager' )
-const dataTransform = require( './transform-data' )
-const pckg = require( '../package.json' )
-const PRIMARY_KEY = require( './primary-key')
-const crypto = require( 'crypto' )
+const EventEmitter = require( "events" ).EventEmitter;
+const util = require( "util" );
+const rethinkdb = require( "rethinkdb" );
+const Connection = require( "./connection" );
+const TableManager = require( "./table-manager" );
+const dataTransform = require( "./transform-data" );
+const pckg = require( "../package.json" );
+const PRIMARY_KEY = require( "./primary-key");
+const crypto = require( "crypto" );
 
 class Connector extends EventEmitter {
 
@@ -45,20 +45,20 @@ class Connector extends EventEmitter {
    * @constructor
    */
   constructor( options ) {
-    super()
-    this.isReady = false
-    this.name = pckg.name
-    this.version = pckg.version
-    this._checkOptions( options )
-    this._options = options
-    this._connection = new Connection( options, this._onConnection.bind( this ) )
-    this._tableManager = new TableManager( this._connection )
-    this._defaultTable = options.defaultTable || 'deepstream_records'
-    this._splitChar = options.splitChar || null
+    super();
+    this.isReady = false;
+    this.name = pckg.name;
+    this.version = pckg.version;
+    this._checkOptions( options );
+    this._options = options;
+    this._connection = new Connection( options, this._onConnection.bind( this ) );
+    this._tableManager = new TableManager( this._connection );
+    this._defaultTable = options.defaultTable || "deepstream_records";
+    this._splitChar = options.splitChar || null;
     this._tableMatch = this._splitChar
-      ? new RegExp( '^(\\w+)' + this._escapeRegExp( this._splitChar ) )
-      : null
-    this._primaryKey = options.primaryKey || PRIMARY_KEY
+      ? new RegExp( "^(\\w+)" + this._escapeRegExp( this._splitChar ) )
+      : null;
+    this._primaryKey = options.primaryKey || PRIMARY_KEY;
   }
 
   /**
@@ -74,14 +74,14 @@ class Connector extends EventEmitter {
    * @returns {void}
    */
   set( key, value, callback ) {
-    const params = this._getParams( key )
-    const entry  = dataTransform.transformValueForStorage( value )
-    const insert = this._insert.bind( this, params, entry, callback )
+    const params = this._getParams( key );
+    const entry  = dataTransform.transformValueForStorage( value );
+    const insert = this._insert.bind( this, params, entry, callback );
 
-    if( this._tableManager.hasTable( params.table ) ) {
-      insert()
+    if ( this._tableManager.hasTable( params.table ) ) {
+      insert();
     } else {
-      this._tableManager.createTable( params.table, this._primaryKey, insert )
+      this._tableManager.createTable( params.table, this._primaryKey, insert );
     }
   }
 
@@ -96,19 +96,19 @@ class Connector extends EventEmitter {
    * @returns {void}
    */
   get( key, callback ) {
-    const params = this._getParams( key )
+    const params = this._getParams( key );
 
-    if( this._tableManager.hasTable( params.table ) ) {
+    if ( this._tableManager.hasTable( params.table ) ) {
       rethinkdb.table( params.table ).get( params.id ).run( this._connection.get(), ( error, entry ) => {
-        if( entry ) {
-          delete entry[ this._primaryKey ]
-          delete entry.__key // in case is set
-          entry = dataTransform.transformValueFromStorage( entry )
+        if ( entry ) {
+          delete entry[ this._primaryKey ];
+          delete entry.__key; // in case is set
+          entry = dataTransform.transformValueFromStorage( entry );
         }
-        callback( error, entry )
-      } )
+        callback( error, entry );
+      } );
     } else {
-      callback( null, null )
+      callback( null, null );
     }
   }
 
@@ -123,12 +123,12 @@ class Connector extends EventEmitter {
    * @returns {void}
    */
   delete( key, callback ) {
-    const params = this._getParams( key )
+    const params = this._getParams( key );
 
-    if( this._tableManager.hasTable( params.table ) ) {
-      rethinkdb.table( params.table ).get( params.id ).delete().run( this._connection.get(), callback )
+    if ( this._tableManager.hasTable( params.table ) ) {
+      rethinkdb.table( params.table ).get( params.id ).delete().run( this._connection.get(), callback );
     } else {
-      callback( new Error( 'Table \'' + params.table + '\' does not exist' ) )
+      callback( new Error( "Table '" + params.table + "' does not exist" ) );
     }
   }
 
@@ -141,13 +141,13 @@ class Connector extends EventEmitter {
    * @returns {void}
    */
   _onConnection( error ) {
-    if( error ) {
-      this.emit( 'error', error )
+    if ( error ) {
+      this.emit( "error", error );
     } else {
       this._tableManager.refreshTables( () => {
-        this.isReady = true
-        this.emit( 'ready' )
-      } )
+        this.isReady = true;
+        this.emit( "ready" );
+      } );
     }
   }
 
@@ -161,21 +161,21 @@ class Connector extends EventEmitter {
    * @returns {Object} params
    */
   _getParams( key ) {
-    const table = key.match( this._tableMatch )
-    var params = { table: this._defaultTable, id: key }
+    const table = key.match( this._tableMatch );
+    var params = { table: this._defaultTable, id: key };
 
-    if( table ) {
-      params.table = table[1]
-      params.id = key.substr(table[1].length + 1)
+    if ( table ) {
+      params.table = table[1];
+      params.id = key.substr(table[1].length + 1);
     }
 
     // rethink can't have a key > 127 bytes; hash key and store alongside
-    if( params.id.length > 127 ) {
+    if ( params.id.length > 127 ) {
       params.fullKey = params.id;
-      params.id = crypto.createHash( 'sha256' ).update( params.id ).digest( 'hex' );
+      params.id = crypto.createHash( "sha256" ).update( params.id ).digest( "hex" );
     }
 
-    return params
+    return params;
   }
 
   /**
@@ -189,15 +189,15 @@ class Connector extends EventEmitter {
    * @returns {void}
    */
   _insert( params, value, callback ) {
-    value[ this._primaryKey ] = params.id
-    if( params.fullKey ) {
-      value.__key = params.fullKey
+    value[ this._primaryKey ] = params.id;
+    if ( params.fullKey ) {
+      value.__key = params.fullKey;
     }
 
     rethinkdb
       .table( params.table )
-      .insert( value, { returnChanges: false, conflict: 'replace' } )
-      .run( this._connection.get(), callback )
+      .insert( value, { returnChanges: false, conflict: "replace" } )
+      .run( this._connection.get(), callback );
   }
 
   /**
@@ -210,11 +210,11 @@ class Connector extends EventEmitter {
    * @returns {void}
    */
   _checkOptions( options ) {
-    if( typeof options.host !== 'string' ) {
-      throw new Error( 'Missing option host' )
+    if ( typeof options.host !== "string" ) {
+      throw new Error( "Missing option host" );
     }
-    if( isNaN( options.port ) ) {
-      throw new Error( 'Missing option port' )
+    if ( isNaN( options.port ) ) {
+      throw new Error( "Missing option port" );
     }
   }
 
@@ -230,7 +230,7 @@ class Connector extends EventEmitter {
    * @returns {String} escaped user input
    */
   _escapeRegExp( string ) {
-    return string.replace( /[.*+?^${}()|[\]\\]/g, '\\$&' ) // $& means the whole matched string
+    return string.replace( /[.*+?^${}()|[\]\\]/g, "\\$&" ); // $& means the whole matched string
   }
 }
-module.exports = Connector
+module.exports = Connector;

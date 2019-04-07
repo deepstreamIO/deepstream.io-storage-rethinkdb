@@ -1,6 +1,6 @@
-"use strict"
+"use strict";
 
-const rethinkdb = require( 'rethinkdb' )
+const rethinkdb = require( "rethinkdb" );
 
 class Connection {
 
@@ -15,12 +15,12 @@ class Connection {
    * @constructor
    */
   constructor( options, callback ) {
-    this._options = options
-    this._callback = callback
-    this._connection = null
-    this._database = options.database || 'deepstream'
-    options.db = this._database
-    rethinkdb.connect( options, this._fn( this._onConnection ) )
+    this._options = options;
+    this._callback = callback;
+    this._connection = null;
+    this._database = options.database || "deepstream";
+    options.db = this._database;
+    rethinkdb.connect( options, this._fn( this._onConnection ) );
   }
 
   /**
@@ -30,7 +30,7 @@ class Connection {
    * @returns {RethinkDB Connection} connection
    */
   get() {
-    return this._connection
+    return this._connection;
   }
 
   /**
@@ -43,8 +43,8 @@ class Connection {
    * @returns {void}
    */
   _onConnection( connection ) {
-    this._connection = connection
-    rethinkdb.dbList().run( connection, this._fn( this._onDbList ) )
+    this._connection = connection;
+    rethinkdb.dbList().run( connection, this._fn( this._onDbList ) );
   }
 
   /**
@@ -57,10 +57,10 @@ class Connection {
    * @returns {void}
    */
   _onDbList( dbList ) {
-    if( dbList.indexOf( this._database ) === -1 ) {
-      rethinkdb.dbCreate( this._database ).run( this._connection, this._fn( this._onDb ) )
+    if ( dbList.indexOf( this._database ) === -1 ) {
+      rethinkdb.dbCreate( this._database ).run( this._connection, this._fn( this._onDb ) );
     } else {
-      this._onDb()
+      this._onDb();
     }
   }
 
@@ -74,8 +74,8 @@ class Connection {
    * @returns {void}
    */
   _onDb() {
-    this._connection.use( this._database )
-    this._callback( null )
+    this._connection.use( this._database );
+    this._callback( null );
   }
 
   /**
@@ -90,13 +90,13 @@ class Connection {
    */
   _fn( fn ) {
     return function( error, result ) {
-      if( error ) {
-        this._callback( error )
+      if ( error ) {
+        this._callback( error );
       } else {
-        fn.call( this, result )
+        fn.call( this, result );
       }
-    }.bind( this )
+    }.bind( this );
   }
 }
 
-module.exports = Connection
+module.exports = Connection;
