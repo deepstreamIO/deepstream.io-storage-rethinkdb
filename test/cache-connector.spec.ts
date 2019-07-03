@@ -6,7 +6,7 @@ describe('the storage connector has the correct structure', () => {
   let connector: Connector
 
   before('creates the connector', async () => {
-    connector = new Connector(config, {}, {})
+    connector = new Connector(config)
     expect(connector.isReady).to.equal(false)
     await connector.whenReady()
   })

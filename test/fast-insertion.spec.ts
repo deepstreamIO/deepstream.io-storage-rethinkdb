@@ -23,7 +23,7 @@ describe( 'is able to insert a larger number of values in quick succession', () 
     const expected = 20
     let completed = 0
 
-    const callback = (err) =>  {
+    const callback = (err: Error | null) =>  {
       completed++
       expect(err).to.equal( null )
 
@@ -34,7 +34,7 @@ describe( 'is able to insert a larger number of values in quick succession', () 
 
     expect(() => {
       for (let i = 0; i <= expected; i++) {
-        storageConnector.set('quickInsertTestTable/key' + i, i, {}, callback)
+        storageConnector.set('quickInsertTestTable/key' + i, i, {}, callback as any)
       }
     }).not.to.throw()
   })
