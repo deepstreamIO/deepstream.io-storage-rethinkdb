@@ -1,13 +1,16 @@
 {
-  "name": "deepstream.io-storage-rethinkdb",
-  "version": "1.0.2",
+  "name": "@deepstream/storage-rethinkdb",
+  "version": "2.0.0-rc.1",
   "description": "Connects deepstream.io to rethinkdb",
   "main": "src/connector.js",
   "scripts": {
-    "test": "mocha --exit",
+    "tsc": "tsc",
+    "lint": "tslint --project .",
+    "lint:fix": "npm run lint -- --fix",
+    "test": "mocha --opts mocha.opts 'test/*.spec.ts'",
     "coverage": "nyc mocha --exit",
     "ci": "npm run coverage",
-    "docker": "docker run -p 28015:28015 rethinkdb"
+    "docker": "docker run -p 28015:28015 rethinkdb:2.3.6"
   },
   "repository": {
     "type": "git",
@@ -23,9 +26,14 @@
     "rethinkdb": "2.3.3"
   },
   "devDependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.0.10",
+    "@types/rethinkdb": "^2.3.14",
     "chai": "^4.2.0",
     "coveralls": "^3.0.3",
     "mocha": "^6.1.0",
-    "nyc": "^13.3.0"
+    "nyc": "^13.3.0",
+    "tslint": "^5.18.0",
+    "typescript": "^3.5.2"
   }
 }
