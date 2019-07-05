@@ -231,3 +231,5 @@ export class Connector extends DeepstreamPlugin implements Storage {
     return value.replace( /[.*+?^${}()|[\]\\]/g, '\\$&' ) // $& means the whole matched string
   }
 }
+
+export default Connector
