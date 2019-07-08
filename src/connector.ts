@@ -12,7 +12,8 @@ interface RethinkDBOptions extends rethinkdb.ConnectionOptions {
   defaultTable: string,
   splitChar: string,
   host: string,
-  port: number
+  port: number,
+  versionKey?: string
 }
 
 interface Params {
@@ -144,9 +145,14 @@ export class Connector extends DeepstreamPlugin implements Storage {
             callback(null, -1, null)
             return
           }
-          const version = entry._ds._v
+          let version
+          if (this.options.versionKey) {
+            version = entry[this.options.versionKey]
+          } else {
+            version = entry.__ds._v
+          }
           delete entry[this.primaryKey]
-          delete entry._ds // in case is set
+          delete entry.__ds // in case is set
           callback(null, version, entry)
         } )
     } else {
@@ -201,9 +207,14 @@ export class Connector extends DeepstreamPlugin implements Storage {
    * Augments a value with a primary key and writes it to the database
    */
   private insert (params: Params, version: number, data: any, callback: StorageWriteCallback) {
-    const value = { ...data, _ds: { _v: version }, [this.primaryKey]: params.id }
+    let value
+    if (this.options.versionKey) {
+      value = { ...data, [this.options.versionKey]: version, [this.primaryKey]: params.id }
+    } else {
+      value = { ...data, __ds: { _v: version }, [this.primaryKey]: params.id }
+    }
     if (params.fullKey) {
-      value._ds.fullKey = params.fullKey
+      value.__ds.fullKey = params.fullKey
     }
     rethinkdb
       .table(params.table)

@@ -43,7 +43,7 @@ describe('it  distributes  records  between  multiple  tables',  () => {
         .table(tableName)
         .get('valueA')
         .run(conn)
-      expect(record).to.deep.equal({ _ds: { _v: 12 }, own_primary_key: 'valueA', isIn: tableName  })
+      expect(record).to.deep.equal({ __ds: { _v: 12 }, own_primary_key: 'valueA', isIn: tableName  })
     })
 
     it(`creates  and  immediatly  updates  a  value  for  ${tableName}`,  (  done  ) => {

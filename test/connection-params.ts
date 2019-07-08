@@ -4,5 +4,6 @@ export const config = {
     primaryKey: 'own_primary_key',
     db: 'rethinkdb_db_test',
     defaultTable: 'default',
-    splitChar: '/'
+    splitChar: '/',
+    storageKey: null
 }
