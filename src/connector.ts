@@ -153,7 +153,11 @@ export class Connector extends DeepstreamPlugin implements Storage {
           }
           delete entry[this.primaryKey]
           delete entry.__ds // in case is set
-          callback(null, version, entry)
+          if (entry.__dsList) {
+            callback(null, version, entry.__dsList)
+          } else {
+            callback(null, version, entry)
+          }
         } )
     } else {
       callback(null, -1, null)
@@ -208,14 +212,24 @@ export class Connector extends DeepstreamPlugin implements Storage {
    */
   private insert (params: Params, version: number, data: any, callback: StorageWriteCallback) {
     let value
-    if (this.options.versionKey) {
-      value = { ...data, [this.options.versionKey]: version, [this.primaryKey]: params.id }
+    if (data instanceof Array) {
+      if (this.options.versionKey) {
+        value = { __dsList: data, [this.options.versionKey]: version, [this.primaryKey]: params.id }
+      } else {
+        value = { __dsList: data, __ds: { _v: version }, [this.primaryKey]: params.id }
+      }
     } else {
-      value = { ...data, __ds: { _v: version }, [this.primaryKey]: params.id }
+      if (this.options.versionKey) {
+        value = { ...data, [this.options.versionKey]: version, [this.primaryKey]: params.id }
+      } else {
+        value = { ...data, __ds: { _v: version }, [this.primaryKey]: params.id }
+      }
     }
+
     if (params.fullKey) {
       value.__ds.fullKey = params.fullKey
     }
+
     rethinkdb
       .table(params.table)
       .insert(value, { returnChanges: false, conflict: 'replace' } )
