@@ -4,15 +4,19 @@ import { expect } from 'chai'
 import * as rethinkdb from 'rethinkdb'
 
 describe('it  distributes  records  between  multiple  tables',  () => {
-  let cacheConnector: Connector
+  let storageConnector: Connector
   let conn: rethinkdb.Connection
 
   before(async () => {
-    cacheConnector = new Connector(config)
-    expect(cacheConnector.isReady  ).to.equal(  false  )
-    await cacheConnector.whenReady()
+    storageConnector = new Connector(config, { logger: { getNameSpace: () => ({
+      fatal: (e: any, m: any) => {
+        console.error('Fatal exception', e, m)
+      }
+    })
+    }})
+    await storageConnector.whenReady()
 
-    conn = (cacheConnector as any).connection
+    conn = (storageConnector as any).connection
 
     try {
       await rethinkdb.db(config.db).tableDrop(  'dsTestA'  ).run(conn)
@@ -21,7 +25,7 @@ describe('it  distributes  records  between  multiple  tables',  () => {
     } catch (e) {
 
     }
-    await (cacheConnector as any).tableManager.refreshTables()
+    await (storageConnector as any).tableManager.refreshTables()
   })
 
   // tslint:disable-next-line: no-unused-expression
@@ -30,7 +34,7 @@ describe('it  distributes  records  between  multiple  tables',  () => {
     const tableName = tableNames[i]
 
     it(`sets  a  value  for  ${tableName}`,  (done) =>   {
-      cacheConnector.set(`${tableName}/valueA`, 12, { isIn:  tableName },  () => { done() }  )
+      storageConnector.set(`${tableName}/valueA`, 12, { isIn:  tableName },  () => { done() }  )
     })
 
     it(`has  created  ${tableName}`,  async () =>   {
@@ -49,17 +53,17 @@ describe('it  distributes  records  between  multiple  tables',  () => {
     it(`creates  and  immediatly  updates  a  value  for  ${tableName}`,  (  done  ) => {
       let  firstInsertionComplete  =  false
 
-      cacheConnector.set(`${tableName}/someTest`, 2, { state:  'A' },  (  error  ) => {
+      storageConnector.set(`${tableName}/someTest`, 2, { state:  'A' },  (  error  ) => {
         expect(  firstInsertionComplete  ).to.equal(  false  )
         expect(  error  ).to.equal(  null  )
         firstInsertionComplete  = true
       })
 
-      cacheConnector.set(`${tableName}/someTest`, 3, { state:  'B' },  (  error  ) => {
+      storageConnector.set(`${tableName}/someTest`, 3, { state:  'B' },  (  error  ) => {
         expect(  firstInsertionComplete  ).to.equal(  true  )
         expect(  error  ).to.equal(  null  )
 
-        cacheConnector.get(`${tableName}/someTest`,  ( e, version, value  ) => {
+        storageConnector.get(`${tableName}/someTest`,  ( e, version, value  ) => {
           expect(  e  ).to.equal(  null  )
           expect(  value  ).to.deep.equal({  state:  'B'  })
           done()

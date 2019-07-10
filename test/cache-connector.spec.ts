@@ -6,8 +6,12 @@ describe('the storage connector has the correct structure', () => {
   let connector: Connector
 
   before('creates the connector', async () => {
-    connector = new Connector(config)
-    expect(connector.isReady).to.equal(false)
+    connector = new Connector(config, { logger: { getNameSpace: () => ({
+      fatal: (e: any, m: any) => {
+        console.error('Fatal exception', e, m)
+      }
+    })
+    }})
     await connector.whenReady()
   })
 

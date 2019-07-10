@@ -24,7 +24,6 @@ interface Params {
 
 export class Connector extends DeepstreamPlugin implements Storage {
   public apiVersion = 2
-  public isReady = false
   public description = `Rethinkdb Storage Connector ${pluginVersion}`
 
   private connection!: rethinkdb.Connection
@@ -34,6 +33,9 @@ export class Connector extends DeepstreamPlugin implements Storage {
   private tableMatch!: RegExp | null
   private primaryKey: string = this.options.primaryKey || 'ds_id'
   private emitter = new EventEmitter()
+  private isReady: boolean = false
+  private logger = this.services.logger.getNameSpace('RETHINDB')
+
 
   /**
    * Connects deepstream to a rethinkdb. RethinksDB is a great fit for deepstream due to its realtime capabilities.
@@ -65,7 +67,7 @@ export class Connector extends DeepstreamPlugin implements Storage {
    * defaultTable specifies which table records will be stored in that don't specify a table. Defaults to deepstream_records
    * splitChar   specifies a character that separates the record's id from the table it should be stored in. defaults to null
    */
-  constructor (private options: RethinkDBOptions) {
+  constructor (private options: RethinkDBOptions, private services: any) {
     super ()
     this.checkOptions(options)
 
@@ -91,16 +93,13 @@ export class Connector extends DeepstreamPlugin implements Storage {
       this.isReady = true
       this.emitter.emit('ready')
     } catch (error) {
-      this.emitter.emit('error', error)
+      this.logger.fatal('CONNECTION_ERROR', error.toString())
     }
   }
 
   public async whenReady (): Promise<void> {
     if (!this.isReady) {
-      return new Promise((resolve, reject) => {
-        this.emitter.once('ready', resolve)
-        this.emitter.once('error', reject)
-      })
+      return new Promise(resolve => this.emitter.once('ready', resolve))
     }
   }
 

@@ -8,8 +8,13 @@ describe('the storage connector uses a custom version key', () => {
   let connection: rethinkdb.Connection
 
   before('creates the connector', async () => {
-    connector = new Connector({ ...config, versionKey: '__v' })
-    expect(connector.isReady).to.equal(false)
+    connector = new Connector({ ...config, versionKey: '__v' }, { logger: { getNameSpace: () => ({
+      fatal: (e: any, m: any) => {
+        console.error('Fatal exception', e, m)
+      }
+    })
+    }})
+
     await connector.whenReady()
     connection = (connector as any).connection
   })

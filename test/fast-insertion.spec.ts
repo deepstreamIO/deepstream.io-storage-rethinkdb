@@ -7,8 +7,12 @@ describe( 'is able to insert a larger number of values in quick succession', () 
   let storageConnector: Connector
 
   before(async () => {
-    storageConnector = new Connector(config)
-    expect( storageConnector.isReady ).to.equal( false )
+    storageConnector = new Connector(config, { logger: { getNameSpace: () => ({
+      fatal: (e: any, m: any) => {
+        console.error('Fatal exception', e, m)
+      }
+    })
+    }})
     await storageConnector.whenReady()
   })
 

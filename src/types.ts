@@ -1,10 +1,8 @@
 export abstract class DeepstreamPlugin {
-public isReady: boolean = true
-public abstract description: string
-public init? (): void
-public async whenReady (): Promise<void> {}
-public async close (): Promise<void> {}
-public setRecordHandler? (recordHandler: any): void
+    public abstract description: string
+    public init? (): void
+    public async whenReady (): Promise<void> {}
+    public async close (): Promise<void> {}
 }
 
 export type StorageReadCallback = (error: string | null, version?: number, result?: any) => void
