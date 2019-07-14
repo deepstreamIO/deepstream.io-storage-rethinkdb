@@ -2,9 +2,9 @@ import * as rethinkdb from 'rethinkdb'
 import { TableManager } from './table-manager'
 
 import * as crypto from 'crypto'
-import { DeepstreamPlugin, Storage, StorageWriteCallback, StorageReadCallback } from './types'
 import { version as pluginVersion } from '../package.json'
 import { EventEmitter } from 'events'
+import { DeepstreamPlugin, DeepstreamStorage, StorageReadCallback, StorageWriteCallback } from '@deepstream/types'
 
 interface RethinkDBOptions extends rethinkdb.ConnectionOptions {
   primaryKey: string,
@@ -22,7 +22,7 @@ interface Params {
   id: string
 }
 
-export class Connector extends DeepstreamPlugin implements Storage {
+export class Connector extends DeepstreamPlugin implements DeepstreamStorage {
   public apiVersion = 2
   public description = `Rethinkdb Storage Connector ${pluginVersion}`
 
