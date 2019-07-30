@@ -7,19 +7,12 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then brew install rethinkdb  ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then rethinkdb --daemon ; fi
 
-
 addons:
   rethinkdb: '2.3'
 
 # Do not insert any code under here without making sures it's in publishingtest first
 language: node_js
-
-plugins:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - g++-4.8
+dist: xenial
 
 node_js:
   - "10"
@@ -33,7 +26,7 @@ matrix:
 
 script:
   - npm run test
-  - curl -o package.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io/v4/scripts/connector/package-connector.sh
+  - curl -o package.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io/master/scripts/connector/package-connector.sh
   - chmod 555 package.sh
   - ./package.sh
 
@@ -43,13 +36,21 @@ deploy:
     api_key: ${GITHUB_TOKEN}
     file_glob: true
     file:
-      - "build/*.tar.gz"
-      - "build/*.zip"
+      - "build/*/*.tar.gz"
+      - "build/*/*.zip"
     on:
       tags: true
+  - provider: npm
+    email: "info@deepstream.io"
+    api_key: ${NPM_TOKEN}
+    skip_cleanup: true
+    on:
+      tags: true
+      node_js: '10'
+      condition: $TRAVIS_OS_NAME = linux
 
 after_deploy:
-  - curl -o test.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io/v4/scripts/connector/test-connector.sh
+  - curl -o test.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io/master/scripts/connector/test-connector.sh
   - chmod 555 test.sh
   - ./test.sh
 
