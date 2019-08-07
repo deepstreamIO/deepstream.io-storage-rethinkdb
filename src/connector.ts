@@ -4,7 +4,7 @@ import { TableManager } from './table-manager'
 import * as crypto from 'crypto'
 import { version as pluginVersion } from '../package.json'
 import { EventEmitter } from 'events'
-import { DeepstreamPlugin, DeepstreamStorage, StorageReadCallback, StorageWriteCallback } from '@deepstream/types'
+import { DeepstreamPlugin, DeepstreamStorage, StorageReadCallback, StorageWriteCallback, EVENT } from '@deepstream/types'
 
 interface RethinkDBOptions extends rethinkdb.ConnectionOptions {
   primaryKey: string,
@@ -13,7 +13,8 @@ interface RethinkDBOptions extends rethinkdb.ConnectionOptions {
   splitChar: string,
   host: string,
   port: number,
-  versionKey?: string
+  versionKey?: string,
+  readOnly: boolean
 }
 
 interface Params {
@@ -35,7 +36,6 @@ export class Connector extends DeepstreamPlugin implements DeepstreamStorage {
   private emitter = new EventEmitter()
   private isReady: boolean = false
   private logger = this.services.logger.getNameSpace('RETHINDB')
-
 
   /**
    * Connects deepstream to a rethinkdb. RethinksDB is a great fit for deepstream due to its realtime capabilities.
@@ -113,6 +113,10 @@ export class Connector extends DeepstreamPlugin implements DeepstreamStorage {
    * only add the method to its array of callbacks
    */
   public set (recordName: string, version: number, data: any, callback: StorageWriteCallback) {
+    if (this.options.readOnly) {
+      this.logger.error(EVENT.ERROR, 'Rethinkdb running in read-only mode, yet set was called')
+    }
+
     const params = this.getParams(recordName)
 
     if (this.tableManager.hasTable(params.table)) {
@@ -167,6 +171,10 @@ export class Connector extends DeepstreamPlugin implements DeepstreamStorage {
    * Deletes an entry from the cache.
    */
   public delete (key: string, callback: StorageWriteCallback) {
+    if (this.options.readOnly) {
+      this.logger.error(EVENT.ERROR, 'Rethinkdb running in read-only mode, yet set was called')
+    }
+
     const params = this.getParams( key )
 
     if (this.tableManager.hasTable(params.table) ) {

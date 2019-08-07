@@ -5,5 +5,6 @@ export const config = {
     db: 'rethinkdb_db_test',
     defaultTable: 'default',
     splitChar: '/',
-    storageKey: null
+    storageKey: null,
+    readOnly: false
 }

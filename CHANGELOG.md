@@ -1,3 +1,9 @@
+## [1.0.3] 2016-08-07
+  
+### Feat
+
+Include a read-only that logs a warning if data is set via the API
+
 ## [1.0.2] 2016-07-25
 
 ### Bug Fix
