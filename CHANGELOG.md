@@ -1,3 +1,10 @@
+## [2.0.1] - 2020-04-12
+
+### Improvement
+
+- Updating dependencies
+- Switching to circleci
+
 ## [2.0.0] 2019-08-07
   
 ### Feat
