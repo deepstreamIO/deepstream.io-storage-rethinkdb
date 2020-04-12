@@ -1,0 +1,61 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@1.1.6
+  coveralls: coveralls/coveralls@1.0.4
+
+jobs:
+  build-and-test:
+    docker:
+      - image: circleci/node:lts
+      - image: rethinkdb:latest
+    working_directory: ~/circleci-build
+    steps:
+      - checkout
+      - run:
+          name: install dockerize
+          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+            DOCKERIZE_VERSION: v0.3.0
+      - run:
+          name: Wait for mongo
+          command: dockerize -wait tcp://localhost:28015 -timeout 1m
+      - node/with-cache:
+          steps:
+            - run: npm install
+            - run: npm run ci
+      - persist_to_workspace:
+          root: /home/circleci
+          paths:
+            - circleci-build
+      - coveralls/upload
+
+  deploy:
+    docker:
+      - image: circleci/node:lts
+    working_directory: ~/circleci-build
+    steps:
+      - attach_workspace:
+          at: /home/circleci
+      - run:
+          name: Publish to NPM
+          command: | 
+            npm set //registry.npmjs.org/:_authToken=$NPM_TOKEN
+            npm publish
+
+workflows:
+    build-and-test:
+      jobs:
+        - build-and-test:
+            filters: 
+              tags:
+                only: /^v.*/
+        - deploy:
+            context: connectors
+            requires:
+              - build-and-test
+            filters:
+              tags:
+                only: /^v.*/
+              branches:
+                ignore: /.*/

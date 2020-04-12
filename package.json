@@ -9,7 +9,7 @@
     "lint:fix": "npm run lint -- --fix",
     "test": "mocha --opts mocha.opts 'test/*.spec.ts'",
     "coverage": "nyc mocha --exit",
-    "ci": "npm run coverage",
+    "ci": "npm run tsc && npm run coverage",
     "docker": "docker run -p 28015:28015 rethinkdb:2.3.6"
   },
   "repository": {
@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@deepstream/protobuf": "^1.0.0",
+    "@types/chai": "^4.2.11",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.6.8",
     "@types/rethinkdb": "^2.3.14",
@@ -37,5 +38,21 @@
     "nyc": "^13.3.0",
     "tslint": "^5.18.0",
     "typescript": "^3.5.2"
+  },
+  "nyc": {
+    "include": [
+      "src/*.ts"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register/transpile-only"
+    ],
+    "reporter": [
+      "lcov"
+    ],
+    "sourceMap": true,
+    "instrument": true
   }
 }
