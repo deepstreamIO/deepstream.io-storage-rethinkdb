@@ -23,21 +23,21 @@
   },
   "homepage": "http://deepstream.io",
   "dependencies": {
-    "@deepstream/types": "^1.0.0",
-    "rethinkdb": "2.3.3"
+    "@deepstream/types": "^2.0.9",
+    "rethinkdb": "2.4.2"
   },
   "devDependencies": {
-    "@deepstream/protobuf": "^1.0.0",
+    "@deepstream/protobuf": "^1.0.1",
     "@types/chai": "^4.2.11",
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^12.6.8",
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^13.11.1",
     "@types/rethinkdb": "^2.3.14",
     "chai": "^4.2.0",
-    "coveralls": "^3.0.3",
-    "mocha": "^6.2.0",
-    "nyc": "^13.3.0",
-    "tslint": "^5.18.0",
-    "typescript": "^3.5.2"
+    "coveralls": "^3.0.11",
+    "mocha": "^7.1.1",
+    "nyc": "^15.0.1",
+    "tslint": "^6.1.1",
+    "typescript": "^3.8.3"
   },
   "nyc": {
     "include": [
