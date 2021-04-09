@@ -19,7 +19,7 @@ plugins:
     options:
       host: ${RETHINKDB_HOST}
       port: ${RETHINKDB_PORT}
-      database: 'someDb'
+      db: 'someDb'
       defaultTable: 'someTable'
       splitChar: '/'
 ```
@@ -36,7 +36,7 @@ plugins:
 	authKey: 'someString',
 
 	//(Optional, defaults to 'deepstream')
-	database: 'someDb',
+	db: 'someDb',
 
 	//(Optional, defaults to 'deepstream_records')
 	defaultTable: 'someTable',

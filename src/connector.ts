@@ -197,7 +197,7 @@ export class Connector extends DeepstreamPlugin implements DeepstreamStorage {
    * containing a table name and a record name
    */
   private getParams (recordName: string) {
-    const table = this.tableMatch ? recordName.match(this.tableMatch) : recordName
+    const table = this.tableMatch ? recordName.match(this.tableMatch) : null
     const params: Params = { table: this.defaultTable, id: recordName }
 
     if (table) {
