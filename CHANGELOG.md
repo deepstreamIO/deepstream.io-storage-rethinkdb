@@ -1,3 +1,9 @@
+## [2.0.2] - 2021-04-08
+
+### Misc
+
+- Updating dependencies
+
 ## [2.0.1] - 2020-04-12
 
 ### Improvement
@@ -6,7 +12,7 @@
 - Switching to circleci
 
 ## [2.0.0] 2019-08-07
-  
+
 ### Feat
 
 - Use typescript

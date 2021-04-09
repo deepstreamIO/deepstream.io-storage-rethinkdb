@@ -9,7 +9,7 @@
 
 This connector uses [the npm rethinkdb package](https://www.npmjs.com/package/rethinkdb). Please have a look there for detailed options.
 
-**Warning**: This plugin will automatically create a table, if it doesn't exist yet. But be aware, in case you create a table manually, use "ds_id" as the primary key. Otherwise the plugin won't be able to find your records. 
+**Warning**: This plugin will automatically create a table, if it doesn't exist yet. But be aware, in case you create a table manually, use "ds_id" as the primary key. Otherwise the plugin won't be able to find your records.
 
 ## Configuration Options
 ```yaml
@@ -55,14 +55,17 @@ plugins:
 
 ## Basic Setup
 ```javascript
-var Deepstream = require( 'deepstream.io' ),
-    RethinkDBStorageConnector = require( 'deepstream.io-storage-rethinkdb' ),
-    server = new Deepstream();
+const { Deepstream } = require('@deepstream/server')
 
-server.set( 'storage', new RethinkDBStorageConnector( {
-  port: 5672,
-  host: 'localhost'
-}));
+const server = new Deepstream({
+  storage: {
+    name: 'rethinkdb',
+    options: {
+     host: 'localhost',
+     port: 28015
+   }
+ },
+})
 
 server.start();
 ```
